@@ -8,4 +8,6 @@ export default {
     db_uri: process.env.DB_URI,
     bcrypt_salt: parseInt(process.env.BYCRYPT_SALT || "10", 10),
     jwt_secret: process.env.JWT_SECRET as string,
+    email_id: process.env.EMAIL_ID,
+    email_password: process.env.EMAIL_PASSWORD,
 }
