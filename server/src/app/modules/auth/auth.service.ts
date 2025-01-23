@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import config from "../../config/config";
+import { generateVerificationCode } from "../../utils/randomCodeGenerate";
 import { sendEmail } from "../../utils/sendEmail";
 import { IUser } from "../user/user.interface";
 import { UserModel } from "../user/user.model";
@@ -14,7 +15,7 @@ const initiateRegistration = async ({ name, email, password }: IUser) => {
       throw new Error("Email already exists");
     }
   
-    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const verificationCode = generateVerificationCode();
     tempRegistrations.set(email, { userData: { name, email, password }, verificationCode });
   
     await sendEmail({
