@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import validator from 'validator';
 import config from "../../config/config";
 import { generateVerificationCode } from "../../utils/randomCodeGenerate";
 import { sendEmail } from "../../utils/sendEmail";
@@ -116,10 +117,10 @@ const resetPassword = async (email: string, code: string, newPassword: string, c
     const hashedPassword = bcrypt.hashSync(newPassword, config.bcrypt_salt); 
  
     await UserModel.findOneAndUpdate( 
-        { email }, 
+        { email: validator.escape(email) }, 
         { password: hashedPassword }, 
         { new: true } 
-    ); 
+    );
  
     tempResetPasswords.delete(email); 
  
