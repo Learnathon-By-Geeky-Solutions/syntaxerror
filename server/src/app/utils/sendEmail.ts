@@ -9,9 +9,9 @@ interface EmailOptions {
 }
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, 
+  host: config.email_host,
+  port: config.email_port,
+  secure: config.email_secure, 
   auth: {
     user: config.email_id, 
     pass: config.email_password,

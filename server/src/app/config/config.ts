@@ -10,4 +10,7 @@ export default {
     jwt_secret: process.env.JWT_SECRET as string,
     email_id: process.env.EMAIL_ID,
     email_password: process.env.EMAIL_PASSWORD,
+    email_host: process.env.EMAIL_HOST,
+    email_port: parseInt(process.env.EMAIL_PORT || "587", 10),
+    email_secure: process.env.EMAIL_SECURE === "true",
 }
