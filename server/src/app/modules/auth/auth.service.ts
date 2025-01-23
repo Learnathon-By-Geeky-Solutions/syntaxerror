@@ -8,6 +8,7 @@ import { ILogin } from "./auth.interface";
 import { createToken } from "./auth.utils";
 
 const tempRegistrations = new Map<string, { userData: IUser; verificationCode: string }>();
+const tempResetPasswords = new Map<string, { verificationCode: string; email: string }>();
 
 const initiateRegistration = async ({ name, email, password }: IUser) => {
     const existingUser = await UserModel.findOne({ email });
@@ -76,9 +77,61 @@ const login = async (payload: ILogin) => {
     return {accessToken, refreshToken};
 }
 
+const initiatePasswordReset = async (email: string) => { 
+    const user = await UserModel.findOne({ email }); 
+    if (!user) { 
+        throw new Error("Email not found"); 
+    } 
+    if(user.isBlocked){
+        throw new Error("User is blocked");
+    }
+    if (!user.isVerified) { 
+        throw new Error("Email not verified"); 
+    }
+    const verificationCode = generateVerificationCode(); 
+    tempResetPasswords.set(email, { verificationCode, email }); 
+ 
+    await sendEmail({ 
+        to: email, 
+        subject: "Password Reset", 
+        text: `Your password reset code is: ${verificationCode}`, 
+    }); 
+ 
+    return { message: "Password reset code sent to email." }; 
+}; 
+
+const resetPassword = async (email: string, code: string, newPassword: string, confirmPassword: string) => { 
+    if (newPassword !== confirmPassword) { 
+        throw new Error("Passwords do not match"); 
+    } 
+    const resetData = tempResetPasswords.get(email); 
+    if (!resetData) { 
+        throw new Error("No password reset request found for this email."); 
+    } 
+ 
+    if (resetData.verificationCode !== code) { 
+        throw new Error("Invalid verification code."); 
+    } 
+ 
+    const hashedPassword = bcrypt.hashSync(newPassword, config.bcrypt_salt); 
+ 
+    await UserModel.findOneAndUpdate( 
+        { email }, 
+        { password: hashedPassword }, 
+        { new: true } 
+    ); 
+ 
+    tempResetPasswords.delete(email); 
+ 
+    return { message: "Password successfully reset." }; 
+}; 
+ 
+
 
 export const AuthService = {
     initiateRegistration,
     verifyCodeAndRegister,
     login,
+    initiatePasswordReset,
+    resetPassword,
 };
