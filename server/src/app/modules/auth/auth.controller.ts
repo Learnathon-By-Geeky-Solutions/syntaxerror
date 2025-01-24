@@ -80,11 +80,7 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 const getme = catchAsync(async (req: Request, res: Response) => {
   const user = req.user;
   if (!user) {
-    res.send({
-      success: false,
-      message: "User not found",
-      statusCode: 404,
-    });
+    throw new Error("User not found");
   }
   res.send({
     success: true,
