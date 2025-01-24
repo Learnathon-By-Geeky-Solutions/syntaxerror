@@ -82,6 +82,7 @@ const getme = catchAsync(async (req: Request, res: Response) => {
   if (!user) {
     throw new Error("User not found");
   }
+  
   res.send({
     success: true,
     message: "User details",
