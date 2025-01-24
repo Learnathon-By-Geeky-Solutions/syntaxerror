@@ -77,6 +77,20 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getme = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user;
+  if (!user) {
+    throw new Error("User not found");
+  }
+  
+  res.send({
+    success: true,
+    message: "User details",
+    statusCode: 200,
+    data: user
+  });
+});
+
 export const AuthController = {
     register,
     verifyCode,
@@ -84,4 +98,5 @@ export const AuthController = {
     logout,
     initiatePasswordReset,
     resetPassword,
+    getme
 }
