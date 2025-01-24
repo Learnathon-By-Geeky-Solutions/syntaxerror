@@ -1,30 +1,36 @@
-import {
-  Navbar as HeroUINavbar,
-  NavbarContent,
-  NavbarMenu,
-  NavbarMenuToggle,
-  NavbarBrand,
-  NavbarItem,
-  NavbarMenuItem,
-} from "@heroui/navbar";
 import { Button } from "@heroui/button";
+import { Input } from "@heroui/input";
 import { Kbd } from "@heroui/kbd";
 import { Link } from "@heroui/link";
-import { Input } from "@heroui/input";
-import { link as linkStyles } from "@heroui/theme";
-import NextLink from "next/link";
-import clsx from "clsx";
-
-import { siteConfig } from "@/config/site";
-import { ThemeSwitch } from "@/components/theme-switch";
 import {
-  TwitterIcon,
-  GithubIcon,
+  Navbar as HeroUINavbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenu,
+  NavbarMenuItem,
+  NavbarMenuToggle,
+} from "@heroui/navbar";
+import { link as linkStyles } from "@heroui/theme";
+import clsx from "clsx";
+import NextLink from "next/link";
+
+import {
   DiscordIcon,
+  GithubIcon,
   HeartFilledIcon,
-  SearchIcon,
   Logo,
+  SearchIcon,
+  TwitterIcon,
 } from "@/components/icons";
+import { ThemeSwitch } from "@/components/theme-switch";
+import { siteConfig } from "@/config/site";
+
+const getColor = (index:any, totalItems:any) => {
+  if (index === 2) return "primary";
+  if (index === totalItems - 1) return "danger";
+  return "foreground";
+};
 
 export const Navbar = () => {
   const searchInput = (
@@ -63,7 +69,7 @@ export const Navbar = () => {
               <NextLink
                 className={clsx(
                   linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
+                  "data-[active=true]:text-primary data-[active=true]:font-medium"
                 )}
                 color="foreground"
                 href={item.href}
@@ -120,13 +126,7 @@ export const Navbar = () => {
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
+                color={getColor(index, siteConfig.navMenuItems.length)}
                 href="#"
                 size="lg"
               >
