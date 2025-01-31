@@ -3,6 +3,7 @@ import cors from 'cors';
 import express, { Application } from 'express';
 import { globalErrorHandler } from './app/middlewares/globalErrorHandler';
 import { AuthRoutes } from './app/modules/auth/auth.routes';
+import { CategoryRoutes } from './app/modules/category/category.routes';
 
 const app: Application = express();
 
@@ -13,6 +14,7 @@ app.use(cors());
 
 // routes
 app.use("/api/auth", AuthRoutes);
+app.use("/api/category", CategoryRoutes);
 
 // Global Error Handler
 app.use(globalErrorHandler);
