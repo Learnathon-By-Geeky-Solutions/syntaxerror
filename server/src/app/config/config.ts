@@ -13,4 +13,7 @@ export default {
     email_host: process.env.EMAIL_HOST,
     email_port: parseInt(process.env.EMAIL_PORT || "587", 10),
     email_secure: process.env.EMAIL_SECURE === "true",
+    cloudinary_cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    cloudinary_api_key: process.env.CLOUDINARY_API_KEY,
+    cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
 }
