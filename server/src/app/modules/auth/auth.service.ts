@@ -26,7 +26,7 @@ const initiateRegistration = async ({ name, email, password }: IUser) => {
       text: `Your verification code is: ${verificationCode}`,
     });
   
-    return { message: "Verification code sent to email." };
+    return { message: "Verification code sent to email.", data: { email } };
   };
 
 

@@ -10,6 +10,9 @@ const register = catchAsync(async (req: Request, res: Response) => {
     success: true,
     statusCode: 201,
     message: result.message,
+    data: {
+      email: result.data.email,
+    },
   });
 });
 
