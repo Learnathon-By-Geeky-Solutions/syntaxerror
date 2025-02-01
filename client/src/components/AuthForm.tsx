@@ -149,7 +149,7 @@ export function AuthForm({ type, onSubmit }: AuthFormProps) {
 
           <div className="relative hidden bg-muted md:block">
             <Image
-              src="/assets/images/Auth.png"
+              src={type === "login" ? "/assets/images/Auth.png" : "/assets/images/AuthRegister.png"}
               alt="Auth Background"
               fill
               className="object-cover dark:brightness-[0.2] dark:grayscale"
