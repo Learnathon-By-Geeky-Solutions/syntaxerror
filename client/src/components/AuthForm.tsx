@@ -68,7 +68,7 @@ export function AuthForm({ type, onSubmit }: AuthFormProps) {
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                   <Link
-                    href="#"
+                    href="/resetPassword"
                     className="ml-auto text-sm underline-offset-2 hover:underline"
                   >
                     Forgot your password?

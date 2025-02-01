@@ -15,7 +15,7 @@ export default function ClientLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const hideLayoutRoutes = ["/login", "/register"];
+  const hideLayoutRoutes = ["/login", "/register", "/resetPassword", "/resetPassword/set-new-password"];
   const shouldHideLayout = hideLayoutRoutes.includes(pathname);
 
   const queryClient = new QueryClient()
