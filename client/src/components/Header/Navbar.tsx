@@ -2,6 +2,7 @@
 
 import { Menu, Search, ShoppingCart, User, X } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "../ui/button";
 
@@ -15,6 +16,11 @@ const Navbar = () => {
     { name: "products", label: "Products" },
     { name: "categories", label: "Categories" },
   ];
+
+  const router = useRouter();
+  const handleLogin = ()=>{
+    router.push("/login");
+  }
 
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50">
@@ -81,7 +87,7 @@ const Navbar = () => {
               <ShoppingCart size={24} />
             </button>
 
-            <Button className="bg-green-500 text-white flex items-center">
+            <Button onClick={handleLogin} className="bg-green-500 text-white flex items-center">
               <User className="mr-1" size={20} />
               Login
             </Button>
