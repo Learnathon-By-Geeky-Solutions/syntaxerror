@@ -1,7 +1,6 @@
-import Footer from "@/components/Footer/Footer";
-import Navbar from "@/components/Header/Navbar";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import ClientLayout from "./ClientLayout";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,15 +23,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="container mx-auto">
-        <Navbar />
-        {children}
-        <Footer />
+        <ClientLayout>{children}</ClientLayout>
         </div>
       </body>
     </html>
