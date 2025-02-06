@@ -14,6 +14,7 @@ const Navbar = () => {
     { name: "home", label: "Home" },
     { name: "products", label: "Products" },
     { name: "categories", label: "Categories" },
+    { name: "about", label: "About" },
   ];
 
   return (
@@ -81,9 +82,8 @@ const Navbar = () => {
               <ShoppingCart size={24} />
             </button>
 
-            <Button className="bg-green-500 text-white flex items-center">
-              <User className="mr-1" size={20} />
-              Login
+            <Button className="bg-green-500 rounded-full text-white flex items-center">
+              <User className="" size={20} />
             </Button>
           </div>
         </div>
