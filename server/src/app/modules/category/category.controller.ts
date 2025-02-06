@@ -15,9 +15,7 @@ const addCategory = catchAsync(async (req:Request, res:Response) => {
         data: result,
     });
 })
- 
- 
- 
+
 const updateCategory = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
     const payload: any = { ...req.body };
@@ -32,7 +30,7 @@ const updateCategory = catchAsync(async (req: Request, res: Response) => {
         data: result,
     });
 });
- 
+
 const getAllCategories = catchAsync(async (_req: Request, res: Response) => {
     const result = await CategoryService.getAllCategories();
     res.send({
@@ -42,7 +40,7 @@ const getAllCategories = catchAsync(async (_req: Request, res: Response) => {
         data: result,
     });
 });
- 
+
 const deleteCategory = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
     await CategoryService.deleteCategory(id);
@@ -52,8 +50,7 @@ const deleteCategory = catchAsync(async (req: Request, res: Response) => {
         statusCode: 200,
     });
 });
- 
- 
+
 export const CategoryController = {
     addCategory,
     updateCategory,

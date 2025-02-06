@@ -15,6 +15,7 @@ const Navbar = () => {
     { name: "home", label: "Home" },
     { name: "products", label: "Products" },
     { name: "categories", label: "Categories" },
+    { name: "about", label: "About" },
   ];
 
   const router = useRouter();
@@ -87,9 +88,8 @@ const Navbar = () => {
               <ShoppingCart size={24} />
             </button>
 
-            <Button onClick={handleLogin} className="bg-green-500 text-white flex items-center">
-              <User className="mr-1" size={20} />
-              Login
+            <Button onClick={handleLogin} className="bg-green-500 rounded-full text-white flex items-center">
+              <User className="" size={20} />
             </Button>
           </div>
         </div>
