@@ -1,6 +1,6 @@
 import { ICategory } from "./category.interface";
 import { CategoryModel } from "./category.model";
-
+ 
 const addCategory = async (payload: ICategory)=>{
     const checkCategory = await CategoryModel.findOne({name: payload.name});
     if(checkCategory){
@@ -22,6 +22,7 @@ const getAllCategories = async () => {
     return await CategoryModel.find();
 };
 
+
 const deleteCategory = async (id: string) => {
     const result = await CategoryModel.findByIdAndDelete(id);
     if (!result) {
@@ -34,4 +35,6 @@ export const CategoryService = {
     updateCategory,
     getAllCategories,
     deleteCategory
+
 };
+

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
 import { CategoryService } from "./category.service";
-
+ 
 const addCategory = catchAsync(async (req:Request, res:Response) => {
     const payload: any = { ...req.body };
     if (req.file?.path) {
@@ -15,8 +15,6 @@ const addCategory = catchAsync(async (req:Request, res:Response) => {
         data: result,
     });
 })
-
-
 
 const updateCategory = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -52,7 +50,6 @@ const deleteCategory = catchAsync(async (req: Request, res: Response) => {
         statusCode: 200,
     });
 });
-
 
 export const CategoryController = {
     addCategory,
