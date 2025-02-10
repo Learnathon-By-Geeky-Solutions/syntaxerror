@@ -1,4 +1,5 @@
 "use client";
+import { TProduct } from "@/app/types/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Package } from "lucide-react";
@@ -7,7 +8,7 @@ import ProductCard from "../product/productCard";
 const LatestProducts = () => {
   const fetchLatestProduct = async () => {
     const { data } = await axios.get(
-      "http://localhost:5000/api/product/latest/product"
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/product/latest/product`
     );
     return data.data;
   };
@@ -34,7 +35,7 @@ const LatestProducts = () => {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 md:gap-6">
-        {data.map((product: any, index: any) => (
+        {data.map((product: TProduct) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>

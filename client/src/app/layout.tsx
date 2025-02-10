@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, Roboto } from "next/font/google";
+import { Inter } from "next/font/google";
 import ClientLayout from "./ClientLayout";
 
 import "./globals.css";
 
-const roboto = Roboto({
-  weight: '400',
-  subsets: ['latin'],
-})
 
 const inter = Inter({ subsets: ['latin'] })
 

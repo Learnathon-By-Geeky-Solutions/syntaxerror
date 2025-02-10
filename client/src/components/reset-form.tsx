@@ -16,9 +16,9 @@ export function ResetForm() {
   const router = useRouter();
 
   const resetMutation = useMutation({
-    mutationFn: async (formData: { email: any }) => {
+    mutationFn: async (formData: { email: string }) => {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/reset-password-request",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/reset-password-request`,
         formData
       );
       return response.data;
