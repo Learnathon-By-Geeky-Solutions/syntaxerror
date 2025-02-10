@@ -12,10 +12,10 @@ const Navbar = () => {
   const [activeLink, setActiveLink] = useState("home");
 
   const navLinks = [
-    { name: "home", label: "Home" },
-    { name: "products", label: "Products" },
-    { name: "categories", label: "Categories" },
-    { name: "about", label: "About" },
+    { name: "home", label: "Home", link: "/"},
+    { name: "products", label: "Products", link: "/product" },
+    { name: "categories", label: "Categories" , link: "/category"},
+    { name: "about", label: "About" , link: "/about"},
   ];
 
   const router = useRouter();
@@ -62,9 +62,9 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-4 mr-4">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href="#"
+                href={link.link}
                 onClick={() => setActiveLink(link.name)}
                 className={`
                   relative text-gray-700 
@@ -79,7 +79,7 @@ const Navbar = () => {
                 {activeLink === link.name && (
                   <span className="absolute -bottom-2 left-0 right-0 h-1 bg-green-600 rounded-full"></span>
                 )}
-              </a>
+              </Link>
             ))}
           </nav>
 

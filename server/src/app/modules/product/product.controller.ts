@@ -53,12 +53,23 @@ const findAllProducts = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const getLatestProducts = catchAsync(async (req: Request, res: Response) => {
+    const limit  = 10;
+    const result = await ProductService.getLatestProducts(limit);
+    res.status(200).json({
+        success: true,
+        message: "Products retrieved successfully",
+        data: result,
+    });
+});
+
 
 export const ProductController = {
     addProduct,
     getProductById,
     updateProduct,
     deleteProduct,
-    findAllProducts
+    findAllProducts,
+    getLatestProducts
     
 }
