@@ -36,7 +36,11 @@ const deleteProduct = async (id: string) => {
 };
 
 const findAllProducts = async () => {
-    return await ProductModel.find();
+    return await ProductModel.find().sort({ createdAt: -1 });
+}
+
+const getLatestProducts = async (limit: number) => {
+    return await ProductModel.find().sort({ createdAt: -1 }).limit(limit);
 }
 
 export const ProductService = {
@@ -45,4 +49,5 @@ export const ProductService = {
     updateProduct,
     deleteProduct,
     findAllProducts,
+    getLatestProducts
 };

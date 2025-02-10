@@ -1,20 +1,20 @@
 "use client";
+import ProductCard from "@/components/product/productCard";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Package } from "lucide-react";
-import ProductCard from "../product/productCard";
 
-const LatestProducts = () => {
-  const fetchLatestProduct = async () => {
+export default function page () {
+  const fetchProduct = async () => {
     const { data } = await axios.get(
-      "http://localhost:5000/api/product/latest/product"
+      "http://localhost:5000/api/product"
     );
     return data.data;
   };
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["latestProduct"],
-    queryFn: fetchLatestProduct,
+    queryFn: fetchProduct,
   });
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -28,7 +28,7 @@ const LatestProducts = () => {
           <div className="flex items-center gap-2 md:gap-3">
             <Package className="w-6 h-6 md:w-7 md:h-7 text-emerald-600" />
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">
-              Latest Products
+              All Products
             </h2>
           </div>
         </div>
@@ -43,4 +43,3 @@ const LatestProducts = () => {
   );
 };
 
-export default LatestProducts;
