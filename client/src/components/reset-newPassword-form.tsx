@@ -17,11 +17,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+
 export function ResetNewPass() {
   const [otp, setOtp] = useState("");
 
   const searchParams = useSearchParams();
-  const email = searchParams.get("email");
+  const email = searchParams.get("email") || "";
   const router = useRouter();
 
   const handleOTPChange = (value: string) => {
@@ -30,9 +31,9 @@ export function ResetNewPass() {
 
 
   const setNewPassMutation = useMutation({
-    mutationFn: async (formData: { email: any; code: any, newPassword:any, confirmPassword:any }) => {
+    mutationFn: async (formData: { email: string; code: string, newPassword:string, confirmPassword:string }) => {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/reset-password",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/reset-password`,
         formData,
       );
       return response.data;

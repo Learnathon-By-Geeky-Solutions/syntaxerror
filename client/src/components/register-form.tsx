@@ -27,9 +27,9 @@ export function RegisterForm() {
   const router = useRouter();
 
   const registerMutation = useMutation({
-    mutationFn: async (formData: { name: any; email: any; password: any }) => {
+    mutationFn: async (formData: { name: string; email: string; password: string }) => {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/register`,
         formData,
       );
       return response.data;
@@ -59,9 +59,9 @@ export function RegisterForm() {
   };
 
   const otpMutation = useMutation({
-    mutationFn: async (formData: { email: any; code: any }) => {
+    mutationFn: async (formData: { email: string; code: string }) => {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/verify",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/verify`,
         formData,
       );
       return response.data;
@@ -77,7 +77,11 @@ export function RegisterForm() {
 
   const handleOtpSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    otpMutation.mutate({ email:email, code: otp });
+    if (email) {
+      otpMutation.mutate({ email: email, code: otp });
+    } else {
+      toast.error("Email is required");
+    }
   };
 
   return (

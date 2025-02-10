@@ -10,9 +10,9 @@ export function LoginForm() {
   const router = useRouter();
   
   const loginMutation = useMutation({
-    mutationFn: async (formData: { email: any; password: any }) => {
+    mutationFn: async (formData: { email: string; password: string }) => {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`,
         formData,
         {
           withCredentials: true,

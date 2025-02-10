@@ -117,7 +117,7 @@ const Navbar = () => {
             {navLinks.map((link) => (
               <a
                 key={link.name}
-                href="#"
+                href={link.link}
                 onClick={() => setActiveLink(link.name)}
                 className={`
                   block py-2 px-4 

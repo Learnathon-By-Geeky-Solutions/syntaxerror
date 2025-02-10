@@ -1,4 +1,5 @@
 "use client";
+import { TProduct } from "@/app/types/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,7 +7,10 @@ import { ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function ProductCard({ product }: any) {
+interface ProductCardProps {
+  product: TProduct;
+}
+export default function ProductCard({ product }: ProductCardProps) {
   return (
     <div>
       <Card

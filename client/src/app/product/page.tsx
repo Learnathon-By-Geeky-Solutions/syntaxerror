@@ -3,11 +3,12 @@ import ProductCard from "@/components/product/productCard";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Package } from "lucide-react";
+import { TProduct } from "../types/types";
 
-export default function page () {
+export default function Page () {
   const fetchProduct = async () => {
     const { data } = await axios.get(
-      "http://localhost:5000/api/product"
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/product`
     );
     return data.data;
   };
@@ -34,7 +35,7 @@ export default function page () {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 md:gap-6">
-        {data.map((product: any, index: any) => (
+        {data.map((product: TProduct) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>
