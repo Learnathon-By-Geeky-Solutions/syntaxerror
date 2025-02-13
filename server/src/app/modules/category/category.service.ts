@@ -22,6 +22,14 @@ const getAllCategories = async () => {
     return await CategoryModel.find();
 };
 
+const getById = async (id: string) => {
+    const result = await CategoryModel.findById(id);
+    if (!result) {
+        throw new Error("Category not found");
+    }
+    return result;
+}
+
 
 const deleteCategory = async (id: string) => {
     const result = await CategoryModel.findByIdAndDelete(id);
@@ -34,7 +42,8 @@ export const CategoryService = {
     addCategory,
     updateCategory,
     getAllCategories,
-    deleteCategory
+    deleteCategory,
+    getById
 
 };
 

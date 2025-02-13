@@ -1,27 +1,56 @@
 "use client";
 
-import { Menu, Search, ShoppingCart, User, X } from "lucide-react";
+import useCart from "@/hooks/use-Cart";
+import { Menu, Search, User, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Cart from "../Cart/Cart";
 import { Button } from "../ui/button";
+
+
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
+  // const [cartItems, setCartItems] = useState([]);
+
+  
+  // useEffect(() => {
+  //   const fetchCart = async () => {
+  //     try {
+  //       const { data } = await axios.get(
+  //         `${process.env.NEXT_PUBLIC_BASE_URL}/api/cart`,
+  //         { withCredentials: true }
+  //       );
+  //       console.log("Cart Data:", data.data.products);
+  //       setCartItems(data.data.products);
+  //     } catch (error) {
+  //       console.error("Error fetching cart:", error);
+  //       if (axios.isAxiosError(error)) {
+  //         console.error("Axios error details:", error.response?.data);
+  //       }
+  //     }
+  //   };
+  //   fetchCart();
+  // }, []);
+
+  const { cartItems, refetch } = useCart();
+  console.log(refetch)
 
   const navLinks = [
-    { name: "home", label: "Home", link: "/"},
+    { name: "home", label: "Home", link: "/" },
     { name: "products", label: "Products", link: "/product" },
-    { name: "categories", label: "Categories" , link: "/category"},
-    { name: "about", label: "About" , link: "/about"},
+    { name: "categories", label: "Categories", link: "/category" },
+    { name: "about", label: "About", link: "/about" },
   ];
 
   const router = useRouter();
-  const handleLogin = ()=>{
+  const handleLogin = () => {
     router.push("/login");
-  }
+  };
+
 
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50">
@@ -84,11 +113,12 @@ const Navbar = () => {
           </nav>
 
           <div className="flex items-center space-x-3">
-            <button className="text-gray-700 hover:text-green-600">
-              <ShoppingCart size={24} />
-            </button>
+           <Cart cartItems={cartItems} />
 
-            <Button onClick={handleLogin} className="bg-green-500 rounded-full text-white flex items-center">
+            <Button
+              onClick={handleLogin}
+              className="bg-green-500 rounded-full text-white flex items-center"
+            >
               <User className="" size={20} />
             </Button>
           </div>

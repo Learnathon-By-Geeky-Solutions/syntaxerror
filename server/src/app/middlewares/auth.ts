@@ -7,13 +7,20 @@ import catchAsync from "../utils/catchAsync";
 
 export const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
+    // const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return next(new Error("Unauthorized: Missing or invalid token"));
+    // if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    //   return next(new Error("Unauthorized: Missing or invalid token"));
+    // }
+
+    // const token = authHeader.split(" ")[1];
+
+    const token = req.cookies?.token; 
+
+    if (!token) {
+      console.error("Unauthorized: Token is missing in cookies");
+       res.status(401).json({ success: false, message: "Unauthorized: Missing token in cookies" });
     }
-
-    const token = authHeader.split(" ")[1];
 
     try {
       const decoded = jwt.verify(token, config.jwt_secret) as JwtPayload;

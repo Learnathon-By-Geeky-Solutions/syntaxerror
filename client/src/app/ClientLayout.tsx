@@ -22,12 +22,14 @@ export default function ClientLayout({
 
   return (
     <div className="container mx-auto">
-      {!shouldHideLayout && <Navbar />}
+
       <QueryClientProvider client={queryClient}>
+      {!shouldHideLayout && <Navbar />}
       <Toaster richColors  />
       {children}
-      </QueryClientProvider>
       {!shouldHideLayout && <Footer />}
+      </QueryClientProvider>
+
     </div>
   );
 }

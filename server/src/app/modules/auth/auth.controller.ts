@@ -33,9 +33,9 @@ const verifyCode = catchAsync(async (req: Request, res: Response) => {
 
 const login = catchAsync(async (req:Request, res:Response) => {
     const result = await AuthService.login(req.body);
-    const { accessToken, refreshToken } = result;
+    const { accessToken } = result;
   
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie("token", accessToken, {
       httpOnly: true,
     });
   
@@ -50,7 +50,7 @@ const login = catchAsync(async (req:Request, res:Response) => {
   });
 
 const logout = catchAsync(async (req: Request, res: Response) => {
-    res.clearCookie("refreshToken", {
+    res.clearCookie("token", {
         httpOnly: true,
     });
     res.send({

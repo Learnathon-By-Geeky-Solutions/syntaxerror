@@ -74,8 +74,7 @@ const login = async (payload: ILogin) => {
     }
 
     const accessToken = createToken(jwtPayload, config.jwt_secret, '1h');
-    const refreshToken = createToken(jwtPayload, config.jwt_secret, '7d');
-    return {accessToken, refreshToken};
+    return {accessToken};
 }
 
 const initiatePasswordReset = async (email: string) => { 
