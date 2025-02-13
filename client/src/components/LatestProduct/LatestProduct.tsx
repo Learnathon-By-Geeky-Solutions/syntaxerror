@@ -1,5 +1,5 @@
 "use client";
-import { TProduct } from "@/app/types/types";
+import { TProduct } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Package } from "lucide-react";
