@@ -2,10 +2,13 @@ import { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
 import { AuthService } from "./auth.service";
 
-
 const register = catchAsync(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
-  const result = await AuthService.initiateRegistration({ name, email, password});
+  const result = await AuthService.initiateRegistration({
+    name,
+    email,
+    password,
+  });
   res.send({
     success: true,
     statusCode: 201,
@@ -31,52 +34,59 @@ const verifyCode = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const login = catchAsync(async (req:Request, res:Response) => {
-    const result = await AuthService.login(req.body);
-    const { accessToken } = result;
-  
-    res.cookie("token", accessToken, {
-      httpOnly: true,
-    });
-  
-    res.send({
-      success: true,
-      message: "Login successful",
-      statusCode: 200,
-      data: {
-        token: accessToken,
-      },
-    });
+const login = catchAsync(async (req: Request, res: Response) => {
+  const result = await AuthService.login(req.body);
+  const { accessToken } = result;
+
+  res.cookie("token", accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
   });
 
-const logout = catchAsync(async (req: Request, res: Response) => {
-    res.clearCookie("token", {
-        httpOnly: true,
-    });
-    res.send({
-        success: true,
-        message: "Logout successful",
-        statusCode: 200,
-    });
+  res.send({
+    success: true,
+    message: "Login successful",
+    statusCode: 200,
+    data: {
+      token: accessToken,
+    },
+  });
 });
 
-const initiatePasswordReset = catchAsync(async (req: Request, res: Response) => {
-  const { email } = req.body;
-  const result = await AuthService.initiatePasswordReset(email);
+const logout = catchAsync(async (req: Request, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    maxAge: 0,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+  });
   res.send({
+    success: true,
+    message: "Logout successful",
+    statusCode: 200,
+  });
+});
+
+const initiatePasswordReset = catchAsync(
+  async (req: Request, res: Response) => {
+    const { email } = req.body;
+    const result = await AuthService.initiatePasswordReset(email);
+    res.send({
       success: true,
       message: result.message,
       statusCode: 200,
-  });
-});
+    });
+  }
+);
 
 const resetPassword = catchAsync(async (req: Request, res: Response) => {
   const { email, code, newPassword, confirmPassword } = req.body;
   await AuthService.resetPassword(email, code, newPassword, confirmPassword);
   res.send({
-      success: true,
-      message: "Password reset successfully",
-      statusCode: 200,
+    success: true,
+    message: "Password reset successfully",
+    statusCode: 200,
   });
 });
 
@@ -85,21 +95,21 @@ const getme = catchAsync(async (req: Request, res: Response) => {
   if (!user) {
     throw new Error("User not found");
   }
-  
+
   res.send({
     success: true,
     message: "User details",
     statusCode: 200,
-    data: user
+    data: user,
   });
 });
 
 export const AuthController = {
-    register,
-    verifyCode,
-    login,
-    logout,
-    initiatePasswordReset,
-    resetPassword,
-    getme
-}
+  register,
+  verifyCode,
+  login,
+  logout,
+  initiatePasswordReset,
+  resetPassword,
+  getme,
+};

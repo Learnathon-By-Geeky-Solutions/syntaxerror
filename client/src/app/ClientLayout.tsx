@@ -2,6 +2,7 @@
 
 import Footer from "@/components/Footer/Footer";
 import Navbar from "@/components/Header/Navbar";
+import { CartProvider } from "@/contexts/CartContext";
 import {
   QueryClient,
   QueryClientProvider
@@ -23,11 +24,14 @@ export default function ClientLayout({
   return (
     <div className="container mx-auto">
 
+
       <QueryClientProvider client={queryClient}>
+      <CartProvider>
       {!shouldHideLayout && <Navbar />}
       <Toaster richColors  />
       {children}
       {!shouldHideLayout && <Footer />}
+      </CartProvider>
       </QueryClientProvider>
 
     </div>

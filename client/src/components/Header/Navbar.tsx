@@ -1,6 +1,5 @@
 "use client";
 
-import useCart from "@/hooks/use-Cart";
 import { Menu, Search, User, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,35 +8,10 @@ import Cart from "../Cart/Cart";
 import { Button } from "../ui/button";
 
 
-
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
-  // const [cartItems, setCartItems] = useState([]);
-
-  
-  // useEffect(() => {
-  //   const fetchCart = async () => {
-  //     try {
-  //       const { data } = await axios.get(
-  //         `${process.env.NEXT_PUBLIC_BASE_URL}/api/cart`,
-  //         { withCredentials: true }
-  //       );
-  //       console.log("Cart Data:", data.data.products);
-  //       setCartItems(data.data.products);
-  //     } catch (error) {
-  //       console.error("Error fetching cart:", error);
-  //       if (axios.isAxiosError(error)) {
-  //         console.error("Axios error details:", error.response?.data);
-  //       }
-  //     }
-  //   };
-  //   fetchCart();
-  // }, []);
-
-  const { cartItems, refetch } = useCart();
-  console.log(refetch)
 
   const navLinks = [
     { name: "home", label: "Home", link: "/" },
@@ -50,7 +24,6 @@ const Navbar = () => {
   const handleLogin = () => {
     router.push("/login");
   };
-
 
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50">
@@ -113,7 +86,7 @@ const Navbar = () => {
           </nav>
 
           <div className="flex items-center space-x-3">
-           <Cart cartItems={cartItems} />
+            <Cart />
 
             <Button
               onClick={handleLogin}
