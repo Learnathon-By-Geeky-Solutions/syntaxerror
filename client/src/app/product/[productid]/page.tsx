@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import useCart from "@/hooks/use-Cart";
+import { useCart } from "@/contexts/CartContext";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ArrowLeft, Clock, Heart, Leaf, Package, Scale, ShoppingCart } from "lucide-react";
@@ -18,12 +18,13 @@ export default function Page({
 }: {
   params: Promise<{ productid: string }>;
 }) {
-  const { cartItems, refetch } = useCart();
   const [categoryName, setCategoryName] = useState("");
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const searchParams = useSearchParams();
   const category = searchParams.get('category');
+  const { addItem } = useCart();
   console.log(category);
+  
 
   fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/category/${category}`)
     .then(response => response.json())
@@ -74,31 +75,24 @@ export default function Page({
 
   
 
-  const handleAddToCart = async () => {
+  
+
+  const handleAddToCart = () => {
     try {
-      const initialQuantity = 1;
-  
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/cart`,
-        {
-          productId: productid,
-          quantity: initialQuantity,
-        },
-        {
-          withCredentials: true, 
-        }
-      );
-  
-      console.log("Added to cart:", response.data);
-  
-      if (response.data.success) {
-        refetch();
-        console.log(cartItems)
-        toast.success('Added to cart successfully')
-      }
+      addItem({
+        productId: data._id,
+        title: data.title,
+        image: data.image,
+        price: data.discount > 0 
+          ? data.price - (data.price * (data.discount / 100))
+          : data.price,
+        quantity: 1,
+        stock: data.stock
+      });
+      toast.success('Added to cart successfully');
     } catch (error) {
-      console.error("Error adding to cart:", error);
-      toast.error(`Something went wrong! Please try again.`);
+      console.log(error)
+      toast.error('Failed to add item to cart');
     }
   };
 

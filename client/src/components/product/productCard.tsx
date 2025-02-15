@@ -2,9 +2,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import useCart from "@/hooks/use-Cart";
+import { useCart } from "@/contexts/CartContext";
 import { TProduct } from "@/types/types";
-import axios from "axios";
 import { ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,44 +12,29 @@ import { toast } from "sonner";
 interface ProductCardProps {
   product: TProduct;
 }
+
 export default function ProductCard({ product }: ProductCardProps) {
-  const {cartItems, refetch} = useCart();
-  const handleAddToCart = async () => {
+  const { addItem } = useCart();
+
+  const handleAddToCart = () => {
     try {
-      const productID = product._id;
-      const initialQuantity = 1;
-  
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/cart`,
-        {
-          productId: productID,
-          quantity: initialQuantity,
-        },
-        {
-          withCredentials: true, 
-        }
-      );
-  
-      console.log("Added to cart:", response.data);
-  
-      if (response.data.success) {
-        refetch();
-        console.log(cartItems)
-        toast.success('Added to cart successfully')
-      }
+      addItem({
+        productId: product._id,
+        title: product.title,
+        image: product.image,
+        price: product.discount > 0 
+          ? product.price - (product.price * (product.discount / 100))
+          : product.price,
+        quantity: 1,
+        stock: product.stock
+      });
+      toast.success('Added to cart successfully');
     } catch (error) {
-      console.error("Error adding to cart:", error);
-      toast.error(`Something went wrong! Please try again.`);
-  
-      if (axios.isAxiosError(error)) {
-        console.error("Axios error details:", error.response?.data);
-        alert(error.response?.data?.message || "Failed to add product to cart.");
-      } else {
-        alert("An unexpected error occurred.");
-      }
+      console.log(error)
+      toast.error('Failed to add item to cart');
     }
   };
-  
+
   return (
     <div>
       <Card
@@ -132,7 +116,8 @@ export default function ProductCard({ product }: ProductCardProps) {
               )}
             </div>
 
-            <Button onClick={handleAddToCart}
+            <Button
+              onClick={handleAddToCart}
               disabled={product.stock < 1}
               className="w-full mt-1 bg-emerald-600 hover:bg-emerald-700 text-white group-hover:shadow-md transition-all duration-300 h-7 md:h-8 text-xs"
             >
