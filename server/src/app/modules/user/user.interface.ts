@@ -4,6 +4,7 @@ export interface IUser {
     password: string;
     role?: 'Admin' | 'Consumer';
     image?: string | null;
+    provider?: "local" | "google" ;
     isBlocked?: boolean;
     isVerified?: boolean;
   }
