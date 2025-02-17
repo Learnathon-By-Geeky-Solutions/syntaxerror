@@ -20,7 +20,7 @@ const handler = NextAuth({
         const res = await axios.post("http://localhost:5000/api/auth/googleUser", {
           name: user.name,
           email: user.email,
-          password: "google",
+          password: process.env.NEXT_PUBLIC_GOOGLE_PASSWORD,
           image: user.image,
           provider: "google",
         });
