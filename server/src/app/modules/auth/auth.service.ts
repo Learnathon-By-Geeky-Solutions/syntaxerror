@@ -127,6 +127,15 @@ const resetPassword = async (email: string, code: string, newPassword: string, c
 }; 
  
 
+const googleAuthLogin = async(payload:IUser)=>{
+    let user = await UserModel.findOne({email: payload.email});
+    if(!user){
+        return await UserModel.create(payload);
+    }
+    return user;
+
+}
+
 
 export const AuthService = {
     initiateRegistration,
@@ -134,4 +143,5 @@ export const AuthService = {
     login,
     initiatePasswordReset,
     resetPassword,
+    googleAuthLogin
 };

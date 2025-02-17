@@ -4,8 +4,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 interface AuthFormProps {
   type: "login" | "register"; 
@@ -13,15 +15,23 @@ interface AuthFormProps {
 }
 
 export function AuthForm({ type, onSubmit }: AuthFormProps) {
+
+  const searchParams = useSearchParams();
+  const path = searchParams.get("redirect");
+
+  const handleSocial = async (provider:string) => {
+    
+    await signIn(provider, {
+      redirect: true,
+      callbackUrl: path ? path : "/",
+    });
+  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     onSubmit(formData);
   };
 
-  const handleGoogleButton = () => {
-    console.log("Google button clicked");
-  };
 
   return (
     <div className={cn("flex flex-col gap-6")}>
@@ -95,7 +105,7 @@ export function AuthForm({ type, onSubmit }: AuthFormProps) {
 
               <Button
                 type="button"
-                onClick={handleGoogleButton}
+                onClick={() => handleSocial("google")}
                 variant="outline"
                 className="w-full"
               >

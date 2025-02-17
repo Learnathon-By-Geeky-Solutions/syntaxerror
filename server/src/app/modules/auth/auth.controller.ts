@@ -104,6 +104,16 @@ const getme = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const googleAuthLogin = catchAsync(async (req: Request, res: Response) => {
+  const payload = req.body;
+  const user = await AuthService.googleAuthLogin(payload);
+  res.send({
+    success: true,
+    message: "Login successful",
+    statusCode: 200,
+    data: user
+  })
+})
 export const AuthController = {
   register,
   verifyCode,
@@ -112,4 +122,5 @@ export const AuthController = {
   initiatePasswordReset,
   resetPassword,
   getme,
+  googleAuthLogin
 };

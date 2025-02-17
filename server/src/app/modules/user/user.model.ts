@@ -13,7 +13,6 @@ const userSchema = new Schema<IUser>(
     email: {
       type: String,
       required: [true, "Email is required"],
-      unique: true,
       validate: {
         validator: (value: string) => validator.isEmail(value),
         message: "Please provide a valid email address",
@@ -31,6 +30,10 @@ const userSchema = new Schema<IUser>(
         message: "Role must be either 'Admin' or 'Consumer'",
       },
       default: "Consumer",
+    },
+    provider: {
+      type: String,
+      default: "local",
     },
     image: {
       type: String,
