@@ -25,7 +25,6 @@ export function ResetForm() {
     },
     onSuccess: () => {
       toast.success("Reset code sent to your email");
-      //console.log(userEmail);
       router.push(`/resetPassword/set-new-password?email=${userEmail}`);
     },
     onError: () => {

@@ -17,3 +17,20 @@ export type TProductCart = {
   quantity: number;
   stock: number;
 }
+
+// export type TProductManage ={
+//   _id: string;
+//   title: string;
+//   description: string;
+//   price: number;
+//   category: {
+//     _id: string;
+//     name: string;
+//     image: string;
+//   };
+//   stock: number;
+//   image: string;
+//   discount: number;
+//   createdAt: string;
+//   updatedAt: string;
+// }

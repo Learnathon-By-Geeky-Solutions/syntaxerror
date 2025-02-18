@@ -10,7 +10,7 @@ import { ArrowLeft, Clock, Heart, Leaf, Package, Scale, ShoppingCart } from "luc
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function Page({
@@ -18,20 +18,26 @@ export default function Page({
 }: {
   params: Promise<{ productid: string }>;
 }) {
+  const { productid } = use(params);
   const [categoryName, setCategoryName] = useState("");
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const searchParams = useSearchParams();
   const category = searchParams.get('category');
   const { addItem } = useCart();
   console.log(category);
-  
 
-  fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/category/${category}`)
-    .then(response => response.json())
-    .then(data => setCategoryName(data.data.name))
-    .catch(error => console.error('Error:', error));
-
-  const { productid } = use(params);
+  useEffect(() => {
+    if (category) {
+      fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/category/${category}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.data) {
+            setCategoryName(data.data.name);
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+  }, [category]);
 
   const fetchProduct = async () => {
     const { data } = await axios.get(
@@ -71,11 +77,6 @@ export default function Page({
 
   const discountedPrice = data.price - (data.price * data.discount) / 100;
   const fadeInAnimation = !isImageLoaded ? "opacity-0" : "opacity-100 transition-opacity duration-500";
-
-
-  
-
-  
 
   const handleAddToCart = () => {
     try {

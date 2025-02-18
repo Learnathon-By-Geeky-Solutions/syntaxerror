@@ -1,3 +1,4 @@
+import { CategoryModel } from "../category/category.model";
 import { IProduct } from "./product.interface";
 import { ProductModel } from "./product.model";
 
@@ -35,10 +36,38 @@ const deleteProduct = async (id: string) => {
     return deletedProduct;
 };
 
-const findAllProducts = async () => {
-    return await ProductModel.find().sort({ createdAt: -1 });
-}
+const findAllProducts = async (categoryName: string | undefined, sortBy: string, page: number, limit: number) => {
+    const skip = (page - 1) * limit;
 
+    let sortOption: any = {};
+
+    if (sortBy === "price_low_to_high") {
+        sortOption.price = 1;
+    } else if (sortBy === "price_high_to_low") {
+        sortOption.price = -1;
+    } else {
+        sortOption.createdAt = -1;
+    }
+    let filter: any = {};
+    if (categoryName) {
+        const category = await CategoryModel.findOne({ name: categoryName });
+        if (category) {
+            filter.category = category._id;
+        } else {
+            return { products: [], total: 0 }; 
+        }
+    }
+
+    const products = await ProductModel.find(filter)
+    .populate("category", "name image")
+        .sort(sortOption)
+        .skip(skip)
+        .limit(limit);
+
+    const total = await ProductModel.countDocuments(filter);
+
+    return { products, total };
+};
 const getLatestProducts = async (limit: number) => {
     return await ProductModel.find().sort({ createdAt: -1 }).limit(limit);
 }
