@@ -25,6 +25,7 @@ export function AuthForm({ type, onSubmit }: AuthFormProps) {
       redirect: true,
       callbackUrl: path ? path : "/",
     });
+
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

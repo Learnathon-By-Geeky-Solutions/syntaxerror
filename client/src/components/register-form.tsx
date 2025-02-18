@@ -22,7 +22,6 @@ import { Button } from "./ui/button";
 export function RegisterForm() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
-  // const [userdata, setUserdata] = useState({});
   const [otp, setOtp] = useState("");
   const router = useRouter();
 
@@ -36,7 +35,6 @@ export function RegisterForm() {
     },
     onSuccess: (data) => {
       toast.success("Verification code sent to your email");
-      //router.push("/verifyEmail");
       setIsDialogOpen(true);
       setEmail(data.data.email);
     },
@@ -50,7 +48,6 @@ export function RegisterForm() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     registerMutation.mutate({ name, email, password });
-    // setUserdata({ name, email, password });
   };
 
 
