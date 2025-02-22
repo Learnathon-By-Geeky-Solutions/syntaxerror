@@ -107,33 +107,7 @@ function Index() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-            <Select
-              value={selectedCategory}
-              onValueChange={setSelectedCategory}
-            >
-              <SelectTrigger className="w-full md:w-[200px] bg-zinc-900 border-zinc-800 text-white">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-zinc-800">
-                <SelectItem value="all" className="text-white">
-                  All Categories
-                </SelectItem>
-                {categories.map((category) => (
-                  <SelectItem
-                    key={category._id}
-                    value={category._id}
-                    className="text-white"
-                  >
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex justify-end mb-4 ">
+        <div className="flex justify-end">
             <Dialog>
               <DialogTrigger>
                 <div className="flex justify-end items-center mb-4 gap-2 px-2 py-2 bg-green-600 text-white rounded-lg cursor-pointer hover:bg-blue-600 text-sm">
@@ -164,6 +138,31 @@ function Index() {
                 />
               </DialogContent>
             </Dialog>
+          </div>
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <Select
+              value={selectedCategory}
+              onValueChange={setSelectedCategory}
+            >
+              <SelectTrigger className="w-full md:w-[200px] bg-zinc-900 border-zinc-800 text-white">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-900 border-zinc-800">
+                <SelectItem value="all" className="text-white">
+                  All Categories
+                </SelectItem>
+                {categories.map((category) => (
+                  <SelectItem
+                    key={category._id}
+                    value={category._id}
+                    className="text-white"
+                  >
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <ProductTable
