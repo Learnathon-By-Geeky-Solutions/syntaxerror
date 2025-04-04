@@ -10,8 +10,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useCart } from "@/contexts/CartContext";
+import { useUser } from "@/contexts/UserContext";
 import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
@@ -19,6 +22,22 @@ import { Separator } from "../ui/separator";
 
 export default function Cart() {
   const { items, removeItem, clearCart, updateQuantity } = useCart();
+  const router = useRouter();
+  const {user} = useUser();
+
+  const handleCheckout = () => {
+    if (items.length === 0) {
+      toast.error("Your cart is empty. Please add items to your cart.");
+      return;
+    }
+    if (!user) {
+      toast.error("Please login to proceed with checkout.");
+      router.push("/login");
+      return;
+    }
+    router.push("/checkout");
+  };
+
 
   const subtotal = items.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -166,7 +185,7 @@ export default function Cart() {
                   <Trash2 className="h-4 w-4 mr-2" />
                   Clear Cart
                 </Button>
-                <Button className="w-full bg-green-600 hover:bg-green-700">
+                <Button onClick={handleCheckout} className="w-full bg-green-600 hover:bg-green-700">
                   Checkout
                 </Button>
               </div>
@@ -181,9 +200,11 @@ export default function Cart() {
                 </div>
               </div>
               <SheetClose asChild>
-                <Button variant="outline" className="mt-4">
-                  Continue Shopping
-                </Button>
+                <Link href="/product">
+                  <Button variant="outline" className="mt-4">
+                    Continue Shopping
+                  </Button>
+                </Link>
               </SheetClose>
             </div>
           )}

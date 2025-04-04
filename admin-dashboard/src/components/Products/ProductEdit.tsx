@@ -70,7 +70,7 @@ export default function ProductEdit({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="">
+        <div className="overflow-y-auto max-h-[70vh] px-2">
           <FormField
             control={form.control}
             name="image"

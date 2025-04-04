@@ -45,11 +45,19 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
 });
 
 const findAllProducts = catchAsync(async (req: Request, res: Response) => {
-    const { page = 1, limit = 10, categoryName, sortBy } = req.query;
+    const { page = 1, limit = 10, categoryName, sortBy, search } = req.query;
 
     const pageNumber = parseInt(page as string, 10);
     const limitNumber = parseInt(limit as string, 10);
-    const { products, total } = await ProductService.findAllProducts(categoryName as string, sortBy as string, pageNumber, limitNumber);
+
+    const { products, total } = await ProductService.findAllProducts(
+        categoryName as string,
+        sortBy as string,
+        pageNumber,
+        limitNumber,
+        search as string 
+    );
+
     res.status(200).json({
         success: true,
         message: "Products retrieved successfully",

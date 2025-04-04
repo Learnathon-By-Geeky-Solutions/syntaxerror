@@ -17,6 +17,7 @@ export interface Product {
     _id: string;
     name: string;
     image: string | null;
+    createdAt?: string;
   }
   
   export interface PaginationInfo {
@@ -25,3 +26,17 @@ export interface Product {
     totalPages: number;
     pageSize: number;
   }
+
+  export interface IUser {
+    _id: string;
+    name: string;
+    email: string;
+    password: string;
+    role?: 'Admin' | 'Consumer';
+    image?: string | null;
+    provider?: "local" | "google" ;
+    isBlocked?: boolean;
+    isVerified?: boolean;
+    createdAt?: string;
+  }
+  

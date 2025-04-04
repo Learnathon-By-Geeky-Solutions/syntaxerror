@@ -1,8 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { ChevronDown, ChevronUp, Grid2X2 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface Category {
@@ -11,7 +12,8 @@ interface Category {
   image: string;
 }
 
-const Categories = () => {
+export default function Home() {
+  const router = useRouter();
   const [showAll, setShowAll] = useState(false);
   const [imageError, setImageError] = useState<Record<string, boolean>>({});
   const [categories, setCategories] = useState<Category[]>([]);
@@ -29,45 +31,55 @@ const Categories = () => {
     setImageError((prev) => ({ ...prev, [categoryId]: true }));
   };
 
+  const handleCategoryClick = (categoryName: string) => {
+    router.push(`/product?category=${categoryName}`);
+  };
+
   return (
-    <section className="w-full px-4 py-12 md:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-full mx-auto">
+    <section className="w-full py-12 bg-gradient-to-b from-white to-gray-50">
+      <div className="container px-4 mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <Grid2X2 className="w-7 h-7 text-green-600" />
-            <h2 className="text-3xl font-bold text-gray-800">Categories</h2>
+            <h2 className="text-2xl font-bold text-gray-800">
+              Explore Categories
+            </h2>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {displayedCategories.map((category) => (
             <Card
-              key={category._id}
-              className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-green-600/20 hover:-translate-y-1"
-            >
-              <CardContent className="p-6 flex flex-col items-center justify-center text-center gap-3">
-                <div className="w-16 h-16 overflow-hidden rounded-full bg-green-50 group-hover:bg-green-600/10 transition-colors duration-300">
-                  {!imageError[category._id] && category.image ? (
-                    <Image
-                      src={category.image}
-                      alt={category.name}
-                      width={64}
-                      height={64}
-                      layout="responsive"
-                      className="object-cover transform group-hover:scale-110 transition-transform duration-300"
-                      onError={() => handleImageError(category._id)}
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-green-50 text-green-600">
-                      {category.name.charAt(0)}
-                    </div>
-                  )}
+            key={category._id}
+            className="relative group overflow-hidden rounded-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+            onClick={() => handleCategoryClick(category.name)}
+          >
+            <div className="relative w-full pt-[100%]">
+              {!imageError[category._id] && category.image ? (
+                <div className="absolute inset-0">
+                  <Image
+                    src={category.image}
+                    alt={category.name}
+                    fill
+                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 16.67vw"
+                    className="object-contain transform group-hover:scale-110 transition-transform duration-500"
+                    onError={() => handleImageError(category._id)}
+                  />
                 </div>
-                <h3 className="font-medium text-gray-800 group-hover:text-green-600 transition-colors duration-300">
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                  <span className="text-3xl font-bold text-white/90">
+                    {category.name.charAt(0)}
+                  </span>
+                </div>
+              )}
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent pt-8 pb-4">
+                <h3 className="text-sm font-medium text-white text-center px-2 truncate">
                   {category.name}
                 </h3>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
+          </Card>
           ))}
         </div>
 
@@ -76,10 +88,10 @@ const Categories = () => {
             <Button
               variant="outline"
               onClick={() => setShowAll(!showAll)}
-              className="group border-2 hover:border-green-600 hover:bg-green-600/5 transition-all duration-300"
+              className="group border hover:border-green-600/30 hover:bg-green-50 transition-all duration-300"
             >
-              <span className="mr-2 text-gray-700 group-hover:text-green-600">
-                {showAll ? "Show Less" : "See More Categories"}
+              <span className="mr-2 text-sm text-gray-700 group-hover:text-green-600">
+                {showAll ? "Show Less" : "Show More"}
               </span>
               {showAll ? (
                 <ChevronUp className="w-4 h-4 text-green-600 group-hover:transform group-hover:-translate-y-1 transition-transform duration-300" />
@@ -92,6 +104,4 @@ const Categories = () => {
       </div>
     </section>
   );
-};
-
-export default Categories;
+}

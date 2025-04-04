@@ -36,7 +36,7 @@ const deleteProduct = async (id: string) => {
     return deletedProduct;
 };
 
-const findAllProducts = async (categoryName: string | undefined, sortBy: string, page: number, limit: number) => {
+const findAllProducts = async (categoryName: string | undefined, sortBy: string, page: number, limit: number, search: string | undefined) => {
     const skip = (page - 1) * limit;
 
     let sortOption: any = {};
@@ -48,18 +48,27 @@ const findAllProducts = async (categoryName: string | undefined, sortBy: string,
     } else {
         sortOption.createdAt = -1;
     }
+
     let filter: any = {};
+
     if (categoryName) {
         const category = await CategoryModel.findOne({ name: categoryName });
         if (category) {
             filter.category = category._id;
         } else {
-            return { products: [], total: 0 }; 
+            return { products: [], total: 0 };
         }
     }
 
+    if (search) {
+        filter.$or = [
+            { title: { $regex: search, $options: 'i' } }, 
+            { description: { $regex: search, $options: 'i' } } 
+        ];
+    }
+
     const products = await ProductModel.find(filter)
-    .populate("category", "name image")
+        .populate("category", "name image")
         .sort(sortOption)
         .skip(skip)
         .limit(limit);
@@ -68,6 +77,7 @@ const findAllProducts = async (categoryName: string | undefined, sortBy: string,
 
     return { products, total };
 };
+
 const getLatestProducts = async (limit: number) => {
     return await ProductModel.find().sort({ createdAt: -1 }).limit(limit);
 }

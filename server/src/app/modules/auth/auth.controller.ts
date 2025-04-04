@@ -44,6 +44,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
     sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
   });
 
+
   res.send({
     success: true,
     message: "Login successful",
@@ -113,7 +114,23 @@ const googleAuthLogin = catchAsync(async (req: Request, res: Response) => {
     statusCode: 200,
     data: user
   })
+});
+
+
+const changePassword = catchAsync(async (req: Request, res: Response) => {
+  const { currentPass, newPassword, confirmPassword } = req.body;
+  const email = req.user?.email;
+  const user = await AuthService.changePassword(email, currentPass, newPassword, confirmPassword);
+  res.send({
+    success: true,
+    message: "Password changed successfully",
+    statusCode: 200,
+    data: user
+  })
 })
+
+
+
 export const AuthController = {
   register,
   verifyCode,
@@ -122,5 +139,6 @@ export const AuthController = {
   initiatePasswordReset,
   resetPassword,
   getme,
-  googleAuthLogin
+  googleAuthLogin,
+  changePassword
 };

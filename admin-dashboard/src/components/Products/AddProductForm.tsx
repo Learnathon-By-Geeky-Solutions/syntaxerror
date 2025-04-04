@@ -1,19 +1,19 @@
 import { Button } from "@/components/ui/button";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Category } from "@/types/types";
@@ -74,12 +74,13 @@ export default function AddProductForm({
       }
     } catch (error) {
       console.error("Error adding product:", error);
+      toast.error("Failed to add product");
     }
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 overflow-y-auto max-h-[70vh] px-2">
         <FormField
           control={form.control}
           name="image"
@@ -125,6 +126,7 @@ export default function AddProductForm({
           )}
         />
 
+        <div className="grid grid-cols-2 gap-4">
         <FormField
           control={form.control}
           name="price"
@@ -171,7 +173,9 @@ export default function AddProductForm({
             </FormItem>
           )}
         />
+        </div>
 
+        <div className="grid grid-cols-2 gap-4">
         <FormField
           control={form.control}
           name="stock"
@@ -207,6 +211,7 @@ export default function AddProductForm({
             </FormItem>
           )}
         />
+        </div>
 
         <div className="flex justify-end gap-2">
           <Button type="button" variant="outline" onClick={onCancel}>
