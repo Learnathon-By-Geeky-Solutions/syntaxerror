@@ -9,18 +9,18 @@ const handler = NextAuth({
   },
   providers: [
     GoogleProvider({
-      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET as string,
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
-  secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async signIn({ user }) {
       try {
-        const res = await axios.post("http://localhost:5000/api/auth/googleUser", {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/googleUser`, {
           name: user.name,
           email: user.email,
-          password: process.env.NEXT_PUBLIC_GOOGLE_PASSWORD,
+          password: process.env.GOOGLE_PASSWORD,
           image: user.image,
           provider: "google",
         });

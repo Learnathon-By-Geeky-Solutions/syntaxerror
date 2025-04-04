@@ -151,6 +151,23 @@ const googleAuthLogin = async (payload: IUser) => {
   return user;
 };
 
+const changePassword = async (email: string, currentPass: string, newPassword:string, confirmPassword: string) => {
+  const user = await UserModel.findOne({ email, provider: "local" });
+  if (!user) {
+    throw new Error("Email not found");
+  }
+  const isPasswordMatch = bcrypt.compareSync(currentPass, user.password);
+  if (!isPasswordMatch) {
+    throw new Error("Invalid password");
+  }
+  if (newPassword !== confirmPassword) {
+    throw new Error("Passwords do not match");
+  }
+  const hashedPassword = bcrypt.hashSync(newPassword, config.bcrypt_salt);
+  return await UserModel.findByIdAndUpdate({ _id: user._id}, {password:hashedPassword}, { new: true });
+
+};
+
 export const AuthService = {
   initiateRegistration,
   verifyCodeAndRegister,
@@ -158,4 +175,5 @@ export const AuthService = {
   initiatePasswordReset,
   resetPassword,
   googleAuthLogin,
+  changePassword
 };

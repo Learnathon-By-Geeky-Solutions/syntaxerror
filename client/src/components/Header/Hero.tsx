@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Clock, Leaf, ShoppingBasket, Truck } from "lucide-react";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -11,7 +12,7 @@ export default function Hero() {
         <div 
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80')",
+            backgroundImage: "url('/assets/images/hero.avif')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -39,10 +40,10 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row gap-4 mb-12">
               <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white">
                 <ShoppingBasket className="w-5 h-5 mr-2" />
-                Start Shopping
+                <Link href="/product">Start Shopping</Link>
               </Button>
               <Button size="lg" variant="outline" className="border-green-600 text-green-600 hover:bg-green-600/10 hover:text-white">
-                View Categories
+              <Link href="/category">View Categories</Link>
               </Button>
             </div>
 

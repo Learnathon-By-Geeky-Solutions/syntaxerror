@@ -3,6 +3,7 @@
 import Footer from "@/components/Footer/Footer";
 import Navbar from "@/components/Header/Navbar";
 import { CartProvider } from "@/contexts/CartContext";
+import { UserProvider } from "@/contexts/UserContext";
 import AuthProvider from "@/services/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
@@ -27,14 +28,16 @@ export default function ClientLayout({
   return (
     <div className="container mx-auto">
       <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <CartProvider>
-            {!shouldHideLayout && <Navbar />}
-            <Toaster richColors />
-            {children}
-            {!shouldHideLayout && <Footer />}
-          </CartProvider>
-        </QueryClientProvider>
+        <UserProvider>
+          <QueryClientProvider client={queryClient}>
+            <CartProvider>
+              {!shouldHideLayout && <Navbar />}
+              <Toaster richColors />
+              {children}
+              {!shouldHideLayout && <Footer />}
+            </CartProvider>
+          </QueryClientProvider>
+        </UserProvider>
       </AuthProvider>
     </div>
   );
