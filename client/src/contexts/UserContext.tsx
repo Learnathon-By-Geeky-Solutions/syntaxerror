@@ -33,14 +33,31 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     try {
       if (session?.user) {
         console.log(session)
-        setUser({
-          name: session.user.name || "",
-          email: session.user.email || "",
-          image: session.user.image || null,
-          role: "Consumer", 
-          provider: "google"
-        });
+        // setUser({
+        //   name: session.user.name || "",
+        //   email: session.user.email || "",
+        //   image: session.user.image || null,
+        //   role: "Consumer", 
+        //   provider: "google"
+        // });
+        
+          const userResponse = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/user?email=${session.user.email}`
+          );
+  
+          const userData = userResponse.data.data[0];
+          console.log(userData)
+          if (userData) {
+            setUser({
+              name: userData.name,
+              email: userData.email,
+              role: userData.role,
+              image: userData.image,
+              provider: userData.provider
+            });
+          }
         return;
+        
       }
 
       const { data } = await axios.get(

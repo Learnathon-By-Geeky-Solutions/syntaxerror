@@ -116,7 +116,7 @@ export default function Cart() {
                           {item.title}
                         </span>
                         <span className="text-sm text-gray-500">
-                          BDT{item.price.toFixed(2)}
+                        ৳ {item.price.toFixed(2)}
                         </span>
                         <div className="mt-2 flex items-center space-x-2">
                           <Button

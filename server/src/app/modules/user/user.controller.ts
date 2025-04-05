@@ -45,8 +45,13 @@ const userAdd = catchAsync(async (req:Request, res:Response) => {
 })
 
 const editUserProfile = catchAsync(async (req:Request, res:Response) => {
+  const { email } = req.query;
+  if (!email || typeof email !== 'string') {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
   const { name, image } = req.body;
-  const email = req.user?.email;
+  
   const updatedUser = await UserService.editUserProfile(email, name, image);
   res.status(200).json({
     success: true,

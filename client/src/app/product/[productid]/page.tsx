@@ -141,11 +141,11 @@ export default function Page({
                   <div className="flex items-center gap-3">
                     {data.discount > 0 ? (
                       <>
-                        <span className="text-2xl font-bold text-green-600">${discountedPrice.toFixed(2)}</span>
-                        <span className="text-lg text-gray-400 line-through">${data.price.toFixed(2)}</span>
+                        <span className="text-2xl font-bold text-green-600">৳{discountedPrice.toFixed(2)}</span>
+                        <span className="text-lg text-gray-400 line-through">৳{data.price.toFixed(2)}</span>
                       </>
                     ) : (
-                      <span className="text-2xl font-bold text-green-600">${data.price.toFixed(2)}</span>
+                      <span className="text-2xl font-bold text-green-600">৳{data.price.toFixed(2)}</span>
                     )}
                   </div>
                 </div>
@@ -171,11 +171,11 @@ export default function Page({
                 <div className="flex items-center gap-4">
                   {data.discount > 0 ? (
                     <>
-                      <span className="text-3xl font-bold text-green-600">${discountedPrice.toFixed(2)}</span>
-                      <span className="text-xl text-gray-400 line-through">${data.price.toFixed(2)}</span>
+                      <span className="text-3xl font-bold text-green-600">৳{discountedPrice.toFixed(2)}</span>
+                      <span className="text-xl text-gray-400 line-through">৳{data.price.toFixed(2)}</span>
                     </>
                   ) : (
-                    <span className="text-3xl font-bold text-green-600">${data.price.toFixed(2)}</span>
+                    <span className="text-3xl font-bold text-green-600">৳{data.price.toFixed(2)}</span>
                   )}
                 </div>
                 <p className="text-gray-600 text-lg leading-relaxed">{data.description}</p>

@@ -174,7 +174,7 @@ export default function OrdersPage() {
                         </div>
                         <div className="flex items-center gap-2">
                           <CreditCard className="w-4 h-4" />
-                          Total: $
+                          Total: ৳
                           {order.orders.reduce(
                             (sum, item) => sum + item.price * item.quantity,
                             0
@@ -231,12 +231,12 @@ export default function OrdersPage() {
                                 <div className="flex-1">
                                   <h4 className="font-medium mb-1">{item.title}</h4>
                                   <p className="text-sm text-muted-foreground">
-                                    Quantity: {item.quantity} × ${item.price}
+                                    Quantity: {item.quantity} × ৳{item.price}
                                   </p>
                                 </div>
                                 <div className="text-right">
                                   <p className="font-medium text-lg">
-                                    ${item.price * item.quantity}
+                                  ৳{item.price * item.quantity}
                                   </p>
                                 </div>
                               </div>
@@ -248,7 +248,7 @@ export default function OrdersPage() {
                                 Total Amount
                               </span>
                               <p className="text-xl font-semibold">
-                                $
+                              ৳
                                 {order.orders.reduce(
                                   (sum, item) => sum + item.price * item.quantity,
                                   0

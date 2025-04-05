@@ -99,19 +99,19 @@ export default function ProductCard({ product }: ProductCardProps) {
               {product.discount > 0 ? (
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-base font-bold text-emerald-600">
-                    BDT
+                  ৳
                     {(
                       product.price -
                       product.price * (product.discount / 100)
                     ).toFixed(2)}
                   </span>
                   <span className="text-xs text-gray-400 line-through">
-                    BDT{product.price}
+                  ৳{product.price}
                   </span>
                 </div>
               ) : (
                 <span className="text-base font-bold text-emerald-600">
-                  BDT{product.price}
+                  ৳{product.price}
                 </span>
               )}
             </div>
