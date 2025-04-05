@@ -58,7 +58,7 @@ export default function Hero() {
                 {
                   icon: <Truck className="w-6 h-6 text-green-600" />,
                   title: "Free Delivery",
-                  desc: "On orders above $50"
+                  desc: "On orders above ৳50"
                 },
                 {
                   icon: <Clock className="w-6 h-6 text-green-600" />,

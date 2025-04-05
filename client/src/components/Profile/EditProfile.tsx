@@ -108,11 +108,8 @@ export default function EditProfilePage() {
         console.log(values)
       setIsLoading(true);
       await axios.patch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/editProfile`,
-        {name: values.name, image: values.image},
-        {
-          withCredentials: true,
-        }
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/editProfile?email=${user?.email}`,
+        { name: values.name, image: values.image},
       );
 
       await refetchUser();
