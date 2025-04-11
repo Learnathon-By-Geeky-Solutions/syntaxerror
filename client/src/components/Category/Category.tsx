@@ -1,8 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ChevronDown, ChevronUp, Grid2X2 } from "lucide-react";
-import Image from "next/image";
+import { ArrowRight, Grid2X2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -12,20 +10,19 @@ interface Category {
   image: string;
 }
 
-export default function Home() {
+const PopularCategories = () => {
   const router = useRouter();
-  const [showAll, setShowAll] = useState(false);
-  const [imageError, setImageError] = useState<Record<string, boolean>>({});
   const [categories, setCategories] = useState<Category[]>([]);
+  const [imageError, setImageError] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/category`)
       .then((response) => response.json())
       .then((data) => setCategories(data.data))
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => console.error("Error fetching categories:", error));
   }, []);
 
-  const displayedCategories = showAll ? categories : categories.slice(0, 6);
+  const displayedCategories = categories.slice(0, 6); 
 
   const handleImageError = (categoryId: string) => {
     setImageError((prev) => ({ ...prev, [categoryId]: true }));
@@ -36,72 +33,47 @@ export default function Home() {
   };
 
   return (
-    <section className="w-full py-12 bg-gradient-to-b from-white to-gray-50">
-      <div className="container px-4 mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <Grid2X2 className="w-7 h-7 text-green-600" />
-            <h2 className="text-2xl font-bold text-gray-800">
-              Explore Categories
-            </h2>
-          </div>
+    <div className="container mx-auto px-4 md:px-8 mb-6">
+      <div className="flex justify-between items-center mb-2 md:mb-4">
+        <div className="flex items-center gap-1 md:gap-2">
+        <Grid2X2 className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800">Popular Categories</h2>
         </div>
+        <Button
+          variant="link"
+          className="text-xs flex items-center gap-1"
+          onClick={() => router.push("/category")}
+        >
+          View All <ArrowRight className="h-2 w-2" />
+        </Button>
+      </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {displayedCategories.map((category) => (
-            <Card
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        {displayedCategories.map((category, i) => (
+          <div
             key={category._id}
-            className="relative group overflow-hidden rounded-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+            className="group relative rounded-xl overflow-hidden h-32 cursor-pointer shadow-sm hover:shadow-md transition-shadow animate-fade-in"
+            style={{ animationDelay: `${i * 100}ms` }}
             onClick={() => handleCategoryClick(category.name)}
           >
-            <div className="relative w-full pt-[100%]">
-              {!imageError[category._id] && category.image ? (
-                <div className="absolute inset-0">
-                  <Image
-                    src={category.image}
-                    alt={category.name}
-                    fill
-                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 16.67vw"
-                    className="object-contain transform group-hover:scale-110 transition-transform duration-500"
-                    onError={() => handleImageError(category._id)}
-                  />
-                </div>
-              ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-white/90">
-                    {category.name.charAt(0)}
-                  </span>
-                </div>
-              )}
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent pt-8 pb-4">
-                <h3 className="text-sm font-medium text-white text-center px-2 truncate">
-                  {category.name}
-                </h3>
-              </div>
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: imageError[category._id]
+                  ? "url('/fallback-image.jpg')"
+                  : `url(${category.image})`,
+              }}
+              onError={() => handleImageError(category._id)}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/10 group-hover:from-black/80 transition-all" />
+            <div className="absolute bottom-0 left-0 p-4">
+              <h3 className="text-white font-medium text-base">{category.name}</h3>
             </div>
-          </Card>
-          ))}
-        </div>
-
-        {categories.length > 6 && (
-          <div className="flex justify-center mt-8">
-            <Button
-              variant="outline"
-              onClick={() => setShowAll(!showAll)}
-              className="group border hover:border-green-600/30 hover:bg-green-50 transition-all duration-300"
-            >
-              <span className="mr-2 text-sm text-gray-700 group-hover:text-green-600">
-                {showAll ? "Show Less" : "Show More"}
-              </span>
-              {showAll ? (
-                <ChevronUp className="w-4 h-4 text-green-600 group-hover:transform group-hover:-translate-y-1 transition-transform duration-300" />
-              ) : (
-                <ChevronDown className="w-4 h-4 text-green-600 group-hover:transform group-hover:translate-y-1 transition-transform duration-300" />
-              )}
-            </Button>
           </div>
-        )}
+        ))}
       </div>
-    </section>
+    </div>
   );
-}
+};
+
+export default PopularCategories;

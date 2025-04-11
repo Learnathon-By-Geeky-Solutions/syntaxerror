@@ -21,7 +21,7 @@ export default function Hero() {
         </div>
 
         {/* Content */}
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto px-4 relative z-10 pb-4">
           <div className="max-w-3xl text-white">
             <div className="inline-flex items-center gap-2 bg-green-600/20 text-green-400 px-4 py-2 rounded-full mb-6">
               <Leaf className="w-4 h-4" />

@@ -103,6 +103,44 @@ export default function OrdersPage() {
     }
   };
 
+  // Calculate order statistics
+  const calculateStatistics = (orders: Order[]) => {
+    // Calculate total spent
+    const totalSpent = orders.reduce((sum, order) => {
+      return sum + order.orders.reduce((orderSum, item) => {
+        return orderSum + (item.price * item.quantity);
+      }, 0);
+    }, 0);
+
+    // Calculate total number of products purchased
+    const totalItems = orders.reduce((sum, order) => {
+      return sum + order.orders.reduce((orderSum, item) => {
+        return orderSum + item.quantity;
+      }, 0);
+    }, 0);
+
+    // Count orders by status
+    const pendingOrders = orders.filter(order => 
+      order.status.toLowerCase() === 'pending'
+    ).length;
+    
+    const processingOrders = orders.filter(order => 
+      order.status.toLowerCase() === 'processing'
+    ).length;
+
+    const shippedOrders = orders.filter(order => 
+      order.status.toLowerCase() === 'shipped'
+    ).length;
+    
+    return {
+      totalSpent,
+      totalItems,
+      pendingOrders,
+      processingOrders,
+      shippedOrders
+    };
+  };
+
   if (!user) {
     return (
       <div className="my-12 py-6 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
@@ -117,22 +155,89 @@ export default function OrdersPage() {
     );
   }
 
+  const stats = calculateStatistics(orders);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="p-3 bg-primary/10 rounded-full">
-            <ShoppingBag className="w-8 h-8 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-              My Orders
-            </h1>
-            <p className="text-muted-foreground">
-              Track and manage your purchase history
-            </p>
+      <div className="flex items-center justify-between gap-4 mb-8">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-primary/10 rounded-full">
+              <ShoppingBag className="w-8 h-8 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                Order Voyage Tracker
+              </h1>
+              <p className="text-muted-foreground">
+                Track and manage your purchase history
+              </p>
+            </div>
           </div>
         </div>
+
+        {orders.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <Card className="p-5 flex gap-4 items-center hover:card-highlight transition-all duration-300">
+              <div className="p-3 rounded-lg bg-primary/10">
+                <ShoppingBag className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-muted-foreground text-sm">Total Orders</p>
+                <p className="text-2xl font-semibold">{orders.length}</p>
+              </div>
+            </Card>
+
+            <Card className="p-5 flex gap-4 items-center hover:card-highlight transition-all duration-300">
+              <div className="p-3 rounded-lg bg-primary/10">
+                <Package className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-muted-foreground text-sm">Items Purchased</p>
+                <p className="text-2xl font-semibold">{stats.totalItems}</p>
+              </div>
+            </Card>
+
+            <Card className="p-5 flex gap-4 items-center hover:card-highlight transition-all duration-300">
+              <div className="p-3 rounded-lg bg-primary/10">
+                <CreditCard className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-muted-foreground text-sm">Total Spent</p>
+                <p className="text-2xl font-semibold">৳{stats.totalSpent.toLocaleString()}</p>
+              </div>
+            </Card>
+
+            <Card className="p-5 flex gap-4 items-center hover:card-highlight transition-all duration-300">
+              <div className="p-3 rounded-lg bg-primary/10">
+                <Truck className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-muted-foreground text-sm">In Transit</p>
+                <div className="flex gap-1.5 mt-1">
+                  {stats.pendingOrders > 0 && (
+                    <div className="flex items-center gap-1 status-pill status-pending text-xs py-0.5 px-2">
+                      <Clock className="h-3 w-3" />
+                      <span>{stats.pendingOrders}</span>
+                    </div>
+                  )}
+                  {stats.processingOrders > 0 && (
+                    <div className="status-pill status-processing text-xs py-0.5 px-2">
+                      <Package className="h-3 w-3" />
+                      <span>{stats.processingOrders}</span>
+                    </div>
+                  )}
+                  {stats.shippedOrders > 0 && (
+                    <div className="status-pill status-shipped text-xs py-0.5 px-2">
+                      <Truck className="h-3 w-3" />
+                      <span>{stats.shippedOrders}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
 
         <div className="space-y-6">
           {orders.length === 0 ? (
@@ -150,7 +255,7 @@ export default function OrdersPage() {
             orders.map((order) => (
               <Card
                 key={order._id}
-                className="overflow-hidden backdrop-blur-sm bg-white/50 dark:bg-gray-900/50 border-2 hover:border-primary/20 transition-all duration-300"
+                className="overflow-hidden backdrop-blur-sm bg-white/50 dark:bg-gray-900/50 hover:border-primary/20 transition-all duration-300"
               >
                 <div className="p-6">
                   <div className="flex flex-col sm:flex-row gap-4 justify-between mb-4">
