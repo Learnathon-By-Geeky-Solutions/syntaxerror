@@ -26,14 +26,16 @@ export default function ClientLayout({
   const queryClient = new QueryClient();
 
   return (
-    <div className="container mx-auto">
+    <div>
       <AuthProvider>
         <UserProvider>
           <QueryClientProvider client={queryClient}>
             <CartProvider>
               {!shouldHideLayout && <Navbar />}
               <Toaster richColors />
-              {children}
+              <div className="container mx-auto">
+                {children}
+              </div>
               {!shouldHideLayout && <Footer />}
             </CartProvider>
           </QueryClientProvider>

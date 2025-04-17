@@ -18,19 +18,27 @@ export type TProductCart = {
   stock: number;
 }
 
-// export type TProductManage ={
-//   _id: string;
-//   title: string;
-//   description: string;
-//   price: number;
-//   category: {
-//     _id: string;
-//     name: string;
-//     image: string;
-//   };
-//   stock: number;
-//   image: string;
-//   discount: number;
-//   createdAt: string;
-//   updatedAt: string;
-// }
+export interface OrderItem {
+  productId: string;
+  title: string;
+  image: string;
+  price: number;
+  quantity: number;
+  stock: number;
+  _id: string;
+}
+
+export interface Order {
+  _id: string;
+  customerInfo: {
+    fullName: string;
+    contact: string;
+    email: string;
+    address: string;
+    note: string;
+  };
+  orders: OrderItem[];
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}

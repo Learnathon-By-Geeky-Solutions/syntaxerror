@@ -88,8 +88,9 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 bg-white shadow-md z-50">
-      <div className="max-w-full mx-auto px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center justify-start gap-4">
+      <div className="container mx-auto">
+      <div className="mx-auto py-3 flex items-center justify-between">
+        <div className="flex items-center justify-start gap-4 pl-2">
           {/* Mobile Hamburger - Left Side */}
           <button
             className="md:hidden"
@@ -150,7 +151,7 @@ const Navbar = () => {
             ))}
           </nav>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 pr-2">
             <Cart />
             {user ? (
               <ProfileDropdown
@@ -172,6 +173,7 @@ const Navbar = () => {
             )}
           </div>
         </div>
+      </div>
       </div>
 
       {/* Mobile Menu */}

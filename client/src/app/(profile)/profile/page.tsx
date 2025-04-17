@@ -5,11 +5,42 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from "@/contexts/UserContext";
+import { Order } from "@/types/types";
+import axios from "axios";
 import { format } from "date-fns";
-import { Calendar, Heart, Mail, Settings, ShoppingBag, User } from "lucide-react";
+import {
+  Calendar,
+  Heart,
+  Lock,
+  Mail,
+  ShoppingBag,
+  User,
+  UserCog,
+} from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function ProfilePage() {
   const { user, isLoading } = useUser();
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/order?email=${user?.email}`
+        );
+        setOrders(response.data.data);
+      } catch (error) {
+        console.error("Failed to fetch orders:", error);
+      } finally {
+      }
+    };
+
+    if (user) {
+      fetchOrders();
+    }
+  }, [user]);
 
   if (isLoading) {
     return (
@@ -98,7 +129,13 @@ export default function ProfilePage() {
               </div>
               <div className="flex items-center gap-3">
                 <ShoppingBag className="w-5 h-5 text-primary" />
-                <span>0 Orders</span>
+                <span>
+                  {
+                    orders.filter((order) => order.status === "Completed" ||  order.status === "Paid")
+                      .length
+                  }{" "}
+                  Orders
+                </span>
               </div>
             </div>
           </Card>
@@ -109,19 +146,45 @@ export default function ProfilePage() {
               <h2 className="text-xl font-semibold mb-6">Quick Actions</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { icon: ShoppingBag, label: "Orders", desc: "View history" },
-                  { icon: Heart, label: "Lists", desc: "Saved items" },
-                  { icon: Settings, label: "Settings", desc: "Account settings" },
+                  {
+                    icon: ShoppingBag,
+                    label: "Orders",
+                    desc: "View history",
+                    link: "/order",
+                  },
+                  {
+                    icon: Heart,
+                    label: "Lists",
+                    desc: "Saved items",
+                    link: "/order",
+                  },
+                  {
+                    icon: Lock,
+                    label: "Password",
+                    desc: "Change password",
+                    link: "/change-password",
+                  },
+                  {
+                    icon: UserCog,
+                    label: "Edit Profile",
+                    desc: "Update details",
+                    link: "/edit-profile",
+                  },
                 ].map((item, index) => (
-                  <Card 
-                    key={index} 
+                  <Card
+                    key={index}
                     className="p-4 hover:bg-accent cursor-pointer transition-all hover:scale-105"
                   >
-                    <div className="flex flex-col items-center text-center gap-2">
+                    <Link
+                      href={item.link}
+                      className="flex flex-col items-center text-center gap-2"
+                    >
                       <item.icon className="w-6 h-6 text-primary" />
                       <h3 className="font-medium">{item.label}</h3>
-                      <p className="text-xs text-muted-foreground">{item.desc}</p>
-                    </div>
+                      <p className="text-xs text-muted-foreground">
+                        {item.desc}
+                      </p>
+                    </Link>
                   </Card>
                 ))}
               </div>
@@ -131,15 +194,47 @@ export default function ProfilePage() {
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-6">Recent Activity</h2>
               <div className="space-y-4">
-                <div className="flex items-center gap-4 p-4 bg-accent/50 rounded-lg">
-                  <ShoppingBag className="w-8 h-8 text-primary" />
-                  <div>
-                    <h3 className="font-medium">No orders yet</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Start shopping to see your order history here
-                    </p>
+                {orders.filter((order) => order.status === "Paid" || order.status === "Completed").length >
+                0 ? (
+                  orders
+                    .filter((order) => order.status === "Paid" || order.status === "Completed")
+                    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) 
+                    .slice(0, 2)
+                    .map((order) => (
+                      <div
+                        key={order._id}
+                        className="flex items-center gap-4 p-4 bg-accent/50 rounded-lg"
+                      >
+                        <ShoppingBag className="w-6 h-6 text-primary" />
+                        <div className="flex-1">
+                          <h3 className="font-medium">
+                            Order #{order._id.slice(-6)}
+                          </h3>
+                          <p className="text-xs text-muted-foreground">
+                            {order.orders.length} items - Total: ৳
+                            {order.orders.reduce(
+                              (sum, item) => sum + item.price * item.quantity,
+                              0
+                            )}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {format(new Date(order.createdAt), "PPP")}
+                          </p>
+                        </div>
+                        <Badge variant="default">{order.status}</Badge>
+                      </div>
+                    ))
+                ) : (
+                  <div className="flex items-center gap-4 p-4 bg-accent/50 rounded-lg">
+                    <ShoppingBag className="w-8 h-8 text-primary" />
+                    <div>
+                      <h3 className="font-medium">No paid orders yet</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Your completed orders will appear here
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </Card>
           </div>
