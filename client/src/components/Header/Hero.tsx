@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function Hero() {
   return (
     <main>
-      <div className="relative min-h-screen lg:min-h-[800px] flex items-center pt-6 md:px-4">
+      <div className="relative min-h-screen lg:min-h-[800px] flex items-center pt-6 pb-2 md:px-4">
         {/* Background with overlay gradient */}
         <div 
           className="absolute inset-0 z-0"

@@ -43,7 +43,7 @@ const formSchema = z
 
 export default function ChangePasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useUser(); 
+  const { user } = useUser();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -99,15 +99,13 @@ export default function ChangePasswordPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 p-4 sm:p-6 lg:p-8">
       <div className="max-w-2xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="p-3 bg-primary/10 rounded-full">
-            <KeyRound className="w-8 h-8 text-primary" />
+        <div className="flex items-center gap-3 mb-6 mt-6">
+          <div className="p-2.5 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full backdrop-blur-sm">
+            <KeyRound className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-              Change Password
-            </h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl md:text-3xl font-bold">Change Password</h1>
+            <p className="text-xs text-muted-foreground">
               Update your password to keep your account secure
             </p>
           </div>

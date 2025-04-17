@@ -105,18 +105,18 @@ export default function EditProfilePage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-        console.log(values)
+      console.log(values);
       setIsLoading(true);
       await axios.patch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/editProfile?email=${user?.email}`,
-        { name: values.name, image: values.image},
+        { name: values.name, image: values.image }
       );
 
       await refetchUser();
       toast.success("Profile updated successfully!");
     } catch (error) {
       console.log(error);
-      toast.error("Failed to update profile. Please try again.")
+      toast.error("Failed to update profile. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -138,15 +138,13 @@ export default function EditProfilePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 p-4 sm:p-6 lg:p-8">
       <div className="max-w-2xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="p-3 bg-primary/10 rounded-full">
-            <Pencil className="w-8 h-8 text-primary" />
+        <div className="flex items-center gap-3 mb-6 mt-6">
+          <div className="p-2.5 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full backdrop-blur-sm">
+            <Pencil className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-              Edit Profile
-            </h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl md:text-3xl font-bold">Edit Profile</h1>
+            <p className="text-xs text-muted-foreground">
               Update your profile information
             </p>
           </div>

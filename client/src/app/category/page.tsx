@@ -32,14 +32,14 @@ export default function Category() {
   };
 
   return (
-    <section className="w-full py-12 bg-gradient-to-b from-white to-gray-50">
-      <div className="container px-4 mx-auto">
-        <div className="flex items-center justify-between mb-8">
+    <section className="w-full py-8 md:py-12">
+      <div className="max-w-7xl mx-auto px-4 ">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <Grid2X2 className="w-7 h-7 text-green-600" />
-            <h2 className="text-2xl font-bold text-gray-800">
-              All Categories ({categories.length})
-            </h2>
+            <Grid2X2 className="w-6 h-6 md:w-8 md:h-8 text-emerald-600" />
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+              All Categories 
+            </h1>
           </div>
         </div>
 

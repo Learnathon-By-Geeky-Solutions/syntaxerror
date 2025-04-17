@@ -25,7 +25,7 @@ export default function Newsletter() {
         <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
           Subscribe to Our Newsletter
         </h2>
-        <p className="text-gray-600 mb-6 max-w-xl mx-auto">
+        <p className="text-gray-600 text-sm md:text-base mb-6 max-w-xs md:max-w-xl mx-auto">
           Stay updated with our latest offers, new products, and healthy recipe
           ideas.
         </p>

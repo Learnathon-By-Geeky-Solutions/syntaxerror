@@ -2,7 +2,7 @@
 import { TProduct } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { ArrowRight, Package } from "lucide-react";
+import { ArrowRight, Loader, Package } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ProductCard from "../product/productCard";
 import { Button } from "../ui/button";
@@ -20,7 +20,13 @@ const LatestProducts = () => {
     queryKey: ["latestProduct"],
     queryFn: fetchLatestProduct,
   });
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return (
+    <section className="py-6 px-4 md:px-8 md:py-8">
+      <div className="mx-auto flex justify-center items-center h-full">
+        <Loader className="animate-spin text-green-600" size={40} />
+      </div>
+    </section>
+  );
   if (error) return <p>Error: {error.message}</p>;
 
   console.log(data);

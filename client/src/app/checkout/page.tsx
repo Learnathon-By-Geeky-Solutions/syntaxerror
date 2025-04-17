@@ -1,6 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -22,7 +28,7 @@ interface OrderItem {
 
 const Checkout = () => {
   const [ordersData, setOrdersData] = useState<OrderItem[]>([]);
-  const {user} = useUser();
+  const { user } = useUser();
 
   // Load orders from localStorage
   useEffect(() => {
@@ -37,20 +43,31 @@ const Checkout = () => {
     }
   }, []);
 
-  const total = ordersData.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = ordersData.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   // Function to handle placing order
   const handlePlaceOrder = async () => {
     const customerInfo = {
-      fullName: (document.getElementById("fullName") as HTMLInputElement)?.value,
+      fullName: (document.getElementById("fullName") as HTMLInputElement)
+        ?.value,
       contact: (document.getElementById("contact") as HTMLInputElement)?.value,
       email: (document.getElementById("email") as HTMLInputElement)?.value,
-      address: (document.getElementById("address") as HTMLTextAreaElement)?.value,
-      note: (document.getElementById("additionalInfo") as HTMLTextAreaElement)?.value,
+      address: (document.getElementById("address") as HTMLTextAreaElement)
+        ?.value,
+      note: (document.getElementById("additionalInfo") as HTMLTextAreaElement)
+        ?.value,
     };
 
     // Validate required fields
-    if (!customerInfo.fullName || !customerInfo.contact || !customerInfo.email || !customerInfo.address) {
+    if (
+      !customerInfo.fullName ||
+      !customerInfo.contact ||
+      !customerInfo.email ||
+      !customerInfo.address
+    ) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -58,16 +75,19 @@ const Checkout = () => {
     toast.loading("Initializing secure payment...");
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/create-checkout-session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          orders: ordersData,
-          customerInfo,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/create-checkout-session`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            orders: ordersData,
+            customerInfo,
+          }),
+        }
+      );
 
       const data = await res.json();
       toast.dismiss();
@@ -85,13 +105,13 @@ const Checkout = () => {
   };
 
   return (
-    <div className="min-h-screen py-12 px-4 md:px-8">
+    <div className="min-h-screen py-8 md:py-12 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-3 mb-12">
-          <div className="flex items-center justify-center h-10 w-10 rounded-full bg-green-100">
-            <Package className="h-5 w-5 text-green-600" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
+        <div className="flex items-center gap-3 mb-4">
+          <Package className="w-6 h-6 md:w-8 md:h-8 text-emerald-600" />
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            Checkout
+          </h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -118,17 +138,31 @@ const Checkout = () => {
 
                 <div>
                   <Label htmlFor="email">Email Address</Label>
-                  <Input disabled defaultValue={user?.email} id="email" type="email" placeholder="john@example.com" />
+                  <Input
+                    disabled
+                    defaultValue={user?.email}
+                    id="email"
+                    type="email"
+                    placeholder="john@example.com"
+                  />
                 </div>
 
                 <div>
                   <Label htmlFor="address">Delivery Address</Label>
-                  <Textarea id="address" placeholder="123 Apple Street, Cupertino, CA 95014" />
+                  <Textarea
+                    id="address"
+                    placeholder="123 Apple Street, Cupertino, CA 95014"
+                  />
                 </div>
 
                 <div>
-                  <Label htmlFor="additionalInfo">Additional Info (Optional)</Label>
-                  <Textarea id="additionalInfo" placeholder="E.g. landmark, delivery time, etc." />
+                  <Label htmlFor="additionalInfo">
+                    Additional Info (Optional)
+                  </Label>
+                  <Textarea
+                    id="additionalInfo"
+                    placeholder="E.g. landmark, delivery time, etc."
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -153,14 +187,15 @@ const Checkout = () => {
                     <div>
                       <h3 className="font-medium">Stripe Secure Checkout</h3>
                       <p className="text-sm text-gray-500">
-                        You&apos;ll be redirected to Stripe&apos;s secure payment page
+                        You&apos;ll be redirected to Stripe&apos;s secure
+                        payment page
                       </p>
                     </div>
                   </div>
-                  <Image 
-                    src="https://logos-world.net/wp-content/uploads/2021/03/Stripe-Logo-700x394.png" 
-                    alt="Stripe Secure" 
-                    width={50} 
+                  <Image
+                    src="https://logos-world.net/wp-content/uploads/2021/03/Stripe-Logo-700x394.png"
+                    alt="Stripe Secure"
+                    width={50}
                     height={20}
                     className="object-contain"
                   />
@@ -180,13 +215,26 @@ const Checkout = () => {
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 {ordersData.map((item) => (
-                  <div key={item.productId} className="flex items-center justify-between gap-4">
-                    <Image height={30} width={30} src={item.image} alt={item.title} className="object-cover rounded-md" />
+                  <div
+                    key={item.productId}
+                    className="flex items-center justify-between gap-4"
+                  >
+                    <Image
+                      height={30}
+                      width={30}
+                      src={item.image}
+                      alt={item.title}
+                      className="object-cover rounded-md"
+                    />
                     <div className="flex-1">
                       <p className="">{item.title}</p>
-                      <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+                      <p className="text-sm text-gray-500">
+                        Qty: {item.quantity}
+                      </p>
                     </div>
-                    <p className="">${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="">
+                      ৳{(item.price * item.quantity).toFixed(2)}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -195,7 +243,7 @@ const Checkout = () => {
 
               <div className="flex justify-between text-lg font-semibold">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>৳{total.toFixed(2)}</span>
               </div>
 
               <div className="text-sm text-gray-600 bg-gray-100 p-3 rounded-md">

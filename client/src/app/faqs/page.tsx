@@ -99,11 +99,11 @@ export default function Page() {
       {/* FAQ Categories */}
       <section className="py-12 px-6 bg-gray-50">
         <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
             {categories.map((category) => (
               <div 
                 key={category.title} 
-                className={`bg-white rounded-lg p-6 text-center hover:shadow-md transition-shadow cursor-pointer ${
+                className={`bg-white rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-shadow cursor-pointer ${
                   selectedCategory === category.title ? 'ring-2 ring-green-600' : ''
                 }`}
                 onClick={() => setSelectedCategory(

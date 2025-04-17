@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { useUser } from "@/contexts/UserContext";
 import { cn } from "@/lib/utils";
+import { Order } from "@/types/types";
 import axios from "axios";
 import { format } from "date-fns";
 import {
@@ -14,6 +15,7 @@ import {
   ChevronUp,
   Clock,
   CreditCard,
+  Loader,
   MapPin,
   Package,
   ShoppingBag,
@@ -22,47 +24,25 @@ import {
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-interface OrderItem {
-  productId: string;
-  title: string;
-  image: string;
-  price: number;
-  quantity: number;
-  stock: number;
-  _id: string;
-}
-
-interface Order {
-  _id: string;
-  customerInfo: {
-    fullName: string;
-    contact: string;
-    email: string;
-    address: string;
-    note: string;
-  };
-  orders: OrderItem[];
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 export default function OrdersPage() {
   const { user } = useUser();
   const [orders, setOrders] = useState<Order[]>([]);
   const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        setIsLoading(true);
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/order?email=${user?.email}`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/order?email=${user?.email}`
         );
         setOrders(response.data.data);
       } catch (error) {
         console.error("Failed to fetch orders:", error);
       } finally {
-        
+        setIsLoading(false);
       }
     };
 
@@ -72,13 +52,15 @@ export default function OrdersPage() {
   }, [user]);
 
   const toggleOrderExpansion = (orderId: string) => {
-    const newExpandedOrders = new Set(expandedOrders);
-    if (expandedOrders.has(orderId)) {
-      newExpandedOrders.delete(orderId);
-    } else {
-      newExpandedOrders.add(orderId);
-    }
-    setExpandedOrders(newExpandedOrders);
+    setExpandedOrders((prev) => {
+      const newSet = new Set(prev);
+      if (prev.has(orderId)) {
+        newSet.delete(orderId);
+      } else {
+        newSet.add(orderId);
+      }
+      return newSet;
+    });
   };
 
   const getStatusColor = (status: string) => {
@@ -95,202 +77,183 @@ export default function OrdersPage() {
   const getStatusIcon = (status: string) => {
     switch (status.toLowerCase()) {
       case "paid":
-        return <CheckCircle2 className="w-4 h-4" />;
+        return <CheckCircle2 className="w-3 h-3" />;
       case "pending":
-        return <AlertCircle className="w-4 h-4" />;
+        return <AlertCircle className="w-3 h-3" />;
       default:
         return null;
     }
   };
 
-  // Calculate order statistics
-  const calculateStatistics = (orders: Order[]) => {
-    // Calculate total spent
-    const totalSpent = orders.reduce((sum, order) => {
-      return sum + order.orders.reduce((orderSum, item) => {
-        return orderSum + (item.price * item.quantity);
-      }, 0);
-    }, 0);
+  const calculateStats = (orders: Order[]) => {
+    const totalSpent = orders
+      .filter(order => ['paid', 'completed'].includes(order.status.toLowerCase()))
+      .reduce(
+        (sum, order) =>
+          sum +
+          order.orders.reduce((orderSum, item) => orderSum + item.price * item.quantity, 0),
+        0
+      );
 
-    // Calculate total number of products purchased
-    const totalItems = orders.reduce((sum, order) => {
-      return sum + order.orders.reduce((orderSum, item) => {
-        return orderSum + item.quantity;
-      }, 0);
-    }, 0);
+    const totalItems = orders.reduce(
+      (sum, order) =>
+        sum + order.orders.reduce((orderSum, item) => orderSum + item.quantity, 0),
+      0
+    );
 
-    // Count orders by status
-    const pendingOrders = orders.filter(order => 
-      order.status.toLowerCase() === 'pending'
+    const pendingOrders = orders.filter(
+      (order) => order.status.toLowerCase() === "pending"
     ).length;
-    
-    const processingOrders = orders.filter(order => 
-      order.status.toLowerCase() === 'processing'
+    const processingOrders = orders.filter(
+      (order) => order.status.toLowerCase() === "paid"
+    ).length;
+    const shippedOrders = orders.filter(
+      (order) => order.status.toLowerCase() === "completed"
     ).length;
 
-    const shippedOrders = orders.filter(order => 
-      order.status.toLowerCase() === 'shipped'
-    ).length;
-    
-    return {
-      totalSpent,
-      totalItems,
-      pendingOrders,
-      processingOrders,
-      shippedOrders
-    };
+    return { totalSpent, totalItems, pendingOrders, processingOrders, shippedOrders };
   };
 
   if (!user) {
     return (
-      <div className="my-12 py-6 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <Card className="p-8 max-w-md w-full mx-4">
-          <div className="text-center">
-            <h2 className="text-lg md:text-xl font-medium text-gray-800 dark:text-gray-200">
-              Please sign in to view your orders
-            </h2>
-          </div>
+      <div className="min-h-[50vh] flex items-center justify-center p-4">
+        <Card className="p-6 w-full max-w-sm mx-auto text-center">
+          <ShoppingBag className="w-12 h-12 mx-auto mb-4 text-primary/60" />
+          <h2 className="text-lg font-medium">Sign in to view orders</h2>
         </Card>
       </div>
     );
   }
 
-  const stats = calculateStatistics(orders);
+  if (isLoading) {
+    return (
+      <div className="min-h-[50vh] flex items-center justify-center">
+        <Loader className="animate-spin text-primary" size={32} />
+      </div>
+    );
+  }
+
+  const stats = calculateStats(orders);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen p-3 sm:p-6">
       <div className="max-w-7xl mx-auto">
-      <div className="flex items-center justify-between gap-4 mb-8">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary/10 rounded-full">
-              <ShoppingBag className="w-8 h-8 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                Order Voyage Tracker
-              </h1>
-              <p className="text-muted-foreground">
-                Track and manage your purchase history
-              </p>
-            </div>
+        <div className="flex items-center gap-3 mb-6 mt-6">
+          <div className="p-2.5 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full backdrop-blur-sm">
+            <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold">Orders</h1>
+            <p className="text-xs text-muted-foreground">Track your purchases</p>
           </div>
         </div>
 
         {orders.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <Card className="p-5 flex gap-4 items-center hover:card-highlight transition-all duration-300">
-              <div className="p-3 rounded-lg bg-primary/10">
-                <ShoppingBag className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <p className="text-muted-foreground text-sm">Total Orders</p>
-                <p className="text-2xl font-semibold">{orders.length}</p>
-              </div>
-            </Card>
-
-            <Card className="p-5 flex gap-4 items-center hover:card-highlight transition-all duration-300">
-              <div className="p-3 rounded-lg bg-primary/10">
-                <Package className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <p className="text-muted-foreground text-sm">Items Purchased</p>
-                <p className="text-2xl font-semibold">{stats.totalItems}</p>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+            <Card className="p-4 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 border-0">
+              <div className="flex gap-3 items-center">
+                <div className="p-2.5 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 backdrop-blur-sm">
+                  <ShoppingBag className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground font-medium">Orders</p>
+                  <p className="text-lg font-bold text-blue-600 dark:text-blue-400">{orders.length}</p>
+                </div>
               </div>
             </Card>
 
-            <Card className="p-5 flex gap-4 items-center hover:card-highlight transition-all duration-300">
-              <div className="p-3 rounded-lg bg-primary/10">
-                <CreditCard className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <p className="text-muted-foreground text-sm">Total Spent</p>
-                <p className="text-2xl font-semibold">৳{stats.totalSpent.toLocaleString()}</p>
+            <Card className="p-4 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 border-0">
+              <div className="flex gap-3 items-center">
+                <div className="p-2.5 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-600/20 backdrop-blur-sm">
+                  <Package className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground font-medium">Items</p>
+                  <p className="text-lg font-bold text-purple-600 dark:text-purple-400">{stats.totalItems}</p>
+                </div>
               </div>
             </Card>
 
-            <Card className="p-5 flex gap-4 items-center hover:card-highlight transition-all duration-300">
-              <div className="p-3 rounded-lg bg-primary/10">
-                <Truck className="h-6 w-6 text-primary" />
+            <Card className="p-4 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-gray-800 dark:to-gray-700 border-0">
+              <div className="flex gap-3 items-center">
+                <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 backdrop-blur-sm">
+                  <CreditCard className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground font-medium">Total</p>
+                  <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">৳{stats.totalSpent.toLocaleString()}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-muted-foreground text-sm">In Transit</p>
-                <div className="flex gap-1.5 mt-1">
-                  {stats.pendingOrders > 0 && (
-                    <div className="flex items-center gap-1 status-pill status-pending text-xs py-0.5 px-2">
-                      <Clock className="h-3 w-3" />
-                      <span>{stats.pendingOrders}</span>
-                    </div>
-                  )}
-                  {stats.processingOrders > 0 && (
-                    <div className="status-pill status-processing text-xs py-0.5 px-2">
-                      <Package className="h-3 w-3" />
-                      <span>{stats.processingOrders}</span>
-                    </div>
-                  )}
-                  {stats.shippedOrders > 0 && (
-                    <div className="status-pill status-shipped text-xs py-0.5 px-2">
-                      <Truck className="h-3 w-3" />
-                      <span>{stats.shippedOrders}</span>
-                    </div>
-                  )}
+            </Card>
+
+            <Card className="p-4 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-gray-800 dark:to-gray-700 border-0">
+              <div className="flex gap-3 items-center">
+                <div className="p-2.5 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/20 backdrop-blur-sm">
+                  <Truck className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground font-medium">In Transit</p>
+                  <div className="flex gap-1.5 mt-1">
+                    {stats.processingOrders > 0 && (
+                      <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300">
+                        <Clock className="w-3 h-3 mr-1" />
+                        {stats.processingOrders}
+                      </Badge>
+                    )}
+                    {stats.pendingOrders > 0 && (
+                      <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300">
+                        <Package className="w-3 h-3 mr-1" />
+                        {stats.pendingOrders}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
               </div>
             </Card>
           </div>
         )}
 
-        <div className="space-y-6">
+
+        <div className="space-y-4">
           {orders.length === 0 ? (
-            <Card className="p-12 text-center backdrop-blur-sm bg-white/50 dark:bg-gray-900/50">
-              <div className="p-4 bg-primary/5 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
-                <ShoppingBag className="w-10 h-10 text-primary" />
-              </div>
-              <h3 className="text-2xl font-semibold mb-3">No orders yet</h3>
-              <p className="text-muted-foreground max-w-md mx-auto">
-                When you make a purchase, your orders will appear here. Start
-                shopping to create your first order!
+            <Card className="p-8 text-center">
+              <ShoppingBag className="w-12 h-12 mx-auto mb-4 text-primary/60" />
+              <h3 className="text-lg font-medium mb-2">No orders yet</h3>
+              <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+                Your order history will appear here after your first purchase
               </p>
             </Card>
           ) : (
             orders.map((order) => (
               <Card
                 key={order._id}
-                className="overflow-hidden backdrop-blur-sm bg-white/50 dark:bg-gray-900/50 hover:border-primary/20 transition-all duration-300"
+                className="overflow-hidden hover:border-primary/20 transition-all"
               >
-                <div className="p-6">
-                  <div className="flex flex-col sm:flex-row gap-4 justify-between mb-4">
+                <div className="p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row gap-3 justify-between mb-4">
                     <div>
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="p-2 bg-primary/10 rounded-lg">
-                          <Package className="w-5 h-5 text-primary" />
-                        </div>
-                        <span className="font-medium text-lg">
-                          Order #{order._id.slice(-8)}
-                        </span>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Package className="w-4 h-4 text-primary" />
+                        <span className="font-medium">#{order._id.slice(-6)}</span>
                       </div>
-                      <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4" />
+                      <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1.5">
+                          <Calendar className="w-3 h-3" />
                           {format(new Date(order.createdAt), "MMM d, yyyy")}
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4" />
-                          {format(new Date(order.createdAt), "h:mm a")}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CreditCard className="w-4 h-4" />
-                          Total: ৳
-                          {order.orders.reduce(
+                        <div className="flex items-center gap-1.5">
+                          <CreditCard className="w-3 h-3" />
+                          ৳{order.orders.reduce(
                             (sum, item) => sum + item.price * item.quantity,
                             0
                           )}
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
                       <Badge
                         className={cn(
-                          "px-3 py-1.5 flex items-center gap-2",
+                          "px-2 py-1 min-w-24 text-xs flex items-center gap-1",
                           getStatusColor(order.status)
                         )}
                       >
@@ -299,120 +262,97 @@ export default function OrdersPage() {
                       </Badge>
                       <button
                         onClick={() => toggleOrderExpansion(order._id)}
-                        className="text-primary hover:text-primary/80 transition-colors p-2 hover:bg-primary/10 rounded-full"
+                        className="text-primary p-1.5 hover:bg-primary/10 rounded-full"
                       >
                         {expandedOrders.has(order._id) ? (
-                          <ChevronUp className="w-5 h-5" />
+                          <ChevronUp className="w-4 h-4" />
                         ) : (
-                          <ChevronDown className="w-5 h-5" />
+                          <ChevronDown className="w-4 h-4" />
                         )}
                       </button>
                     </div>
                   </div>
 
                   {expandedOrders.has(order._id) && (
-                    <div className="mt-6 space-y-6">
-                      <div className="grid gap-6 md:grid-cols-2">
+                    <div className="mt-4 space-y-4">
+                      <div className="grid gap-4 lg:grid-cols-2">
                         <div>
-                          <div className="flex items-center gap-2 mb-4">
-                            <Truck className="w-5 h-5 text-primary" />
-                            <h3 className="font-medium">Order Details</h3>
+                          <div className="flex items-center gap-2 mb-3">
+                            <Package className="w-4 h-4 text-primary" />
+                            <h3 className="font-medium text-sm">Items</h3>
                           </div>
-                          <div className="space-y-3">
+                          <div className="space-y-2">
                             {order.orders.map((item) => (
                               <div
                                 key={item._id}
-                                className="flex items-center gap-4 bg-accent/50 p-4 rounded-xl hover:bg-accent/70 transition-colors"
+                                className="flex items-center gap-3 bg-accent/50 p-3 rounded-lg"
                               >
-                                <div className="relative w-20 h-20">
+                                <div className="relative w-16 h-16 flex-shrink-0">
                                   <Image
                                     fill
                                     src={item.image}
                                     alt={item.title}
-                                    className="object-cover rounded-lg"
-                                    sizes="80px"
+                                    className="object-cover rounded-md"
+                                    sizes="64px"
                                   />
                                 </div>
-                                <div className="flex-1">
-                                  <h4 className="font-medium mb-1">{item.title}</h4>
-                                  <p className="text-sm text-muted-foreground">
-                                    Quantity: {item.quantity} × ৳{item.price}
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="font-medium text-sm truncate">
+                                    {item.title}
+                                  </h4>
+                                  <p className="text-xs text-muted-foreground">
+                                    {item.quantity} × ৳{item.price}
                                   </p>
                                 </div>
                                 <div className="text-right">
-                                  <p className="font-medium text-lg">
-                                  ৳{item.price * item.quantity}
+                                  <p className="font-medium">
+                                    ৳{item.price * item.quantity}
                                   </p>
                                 </div>
                               </div>
                             ))}
                           </div>
-                          <div className="mt-4 p-4 bg-primary/5 rounded-xl">
-                            <div className="flex justify-between items-center">
-                              <span className="text-muted-foreground">
-                                Total Amount
-                              </span>
-                              <p className="text-xl font-semibold">
-                              ৳
-                                {order.orders.reduce(
-                                  (sum, item) => sum + item.price * item.quantity,
-                                  0
-                                )}
-                              </p>
-                            </div>
-                          </div>
                         </div>
 
                         <div>
-                          <div className="flex items-center gap-2 mb-4">
-                            <MapPin className="w-5 h-5 text-primary" />
-                            <h3 className="font-medium">Shipping Information</h3>
+                          <div className="flex items-center gap-2 mb-3">
+                            <MapPin className="w-4 h-4 text-primary" />
+                            <h3 className="font-medium text-sm">Delivery Info</h3>
                           </div>
-                          <Card className="p-6 space-y-4 bg-card/50">
-                            <div>
-                              <p className="text-sm text-muted-foreground mb-1">
-                                Name
-                              </p>
-                              <p className="font-medium">
-                                {order.customerInfo.fullName}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-muted-foreground mb-1">
-                                Contact
-                              </p>
-                              <p className="font-medium">
-                                {order.customerInfo.contact}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-muted-foreground mb-1">
-                                Email
-                              </p>
-                              <p className="font-medium">
-                                {order.customerInfo.email}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-muted-foreground mb-1">
-                                Delivery Address
-                              </p>
-                              <div className="flex items-start gap-2 bg-accent/30 p-3 rounded-lg">
-                                <MapPin className="w-4 h-4 mt-1 flex-shrink-0 text-primary" />
-                                <p className="font-medium">
-                                  {order.customerInfo.address}
+                          <Card className="p-4 space-y-3 bg-card/50">
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <p className="text-xs text-muted-foreground mb-1">
+                                  Name
                                 </p>
+                                <p className="text-sm font-medium">
+                                  {order.customerInfo.fullName}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-xs text-muted-foreground mb-1">
+                                  Contact
+                                </p>
+                                <p className="text-sm font-medium">
+                                  {order.customerInfo.contact}
+                                </p>
+                              </div>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground mb-1">
+                                Address
+                              </p>
+                              <div className="bg-accent/30 p-2 rounded-md">
+                                <p className="text-sm">{order.customerInfo.address}</p>
                               </div>
                             </div>
                             {order.customerInfo.note && (
                               <div>
-                                <p className="text-sm text-muted-foreground mb-1">
+                                <p className="text-xs text-muted-foreground mb-1">
                                   Note
                                 </p>
-                                <div className="bg-accent/30 p-3 rounded-lg">
-                                  <p className="font-medium">
-                                    {order.customerInfo.note}
-                                  </p>
+                                <div className="bg-accent/30 p-2 rounded-md">
+                                  <p className="text-sm">{order.customerInfo.note}</p>
                                 </div>
                               </div>
                             )}
