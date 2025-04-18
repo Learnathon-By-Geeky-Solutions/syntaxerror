@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCart } from "@/contexts/CartContext";
 import { TProduct } from "@/types/types";
+import axios from "axios";
 import { ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface ProductCardProps {
@@ -15,6 +17,28 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
+  const [averageRating, setAverageRating] = useState(0);
+  const [totalReviews, setTotalReviews] = useState(0);
+
+  // Fetch product rating from the backend
+  useEffect(() => {
+    const fetchProductRating = async () => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/review/rating/${product._id}`
+        );
+
+        if (data && data.data) {
+          setAverageRating(data.data.averageRating);
+          setTotalReviews(data.data.totalReviews);
+        }
+      } catch (error) {
+        console.error("Failed to fetch product rating:", error);
+      }
+    };
+
+    fetchProductRating();
+  }, [product._id]);
 
   const handleAddToCart = () => {
     try {
@@ -22,16 +46,17 @@ export default function ProductCard({ product }: ProductCardProps) {
         productId: product._id,
         title: product.title,
         image: product.image,
-        price: product.discount > 0 
-          ? product.price - (product.price * (product.discount / 100))
-          : product.price,
+        price:
+          product.discount > 0
+            ? product.price - product.price * (product.discount / 100)
+            : product.price,
         quantity: 1,
-        stock: product.stock
+        stock: product.stock,
       });
-      toast.success('Added to cart successfully');
+      toast.success("Added to cart successfully");
     } catch (error) {
-      console.log(error)
-      toast.error('Failed to add item to cart');
+      console.log(error);
+      toast.error("Failed to add item to cart");
     }
   };
 
@@ -77,18 +102,21 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
 
           <div className="p-2.5 md:p-3 flex flex-col h-[calc(100%-100%)]">
+            {/* Star Rating Section */}
             <div className="flex items-center gap-0.5 mb-1.5">
               {[...Array(5)].map((_, index) => (
                 <Star
                   key={index}
                   className={`w-3 h-3 md:w-3.5 md:h-3.5 ${
-                    index < Math.floor(5)
+                    index < Math.round(averageRating)
                       ? "text-amber-400 fill-amber-400"
                       : "text-gray-200"
                   }`}
                 />
               ))}
-              <span className="text-xs text-gray-500 ml-1">({5})</span>
+              <span className="text-xs text-gray-500 ml-1">
+                ({totalReviews} reviews)
+              </span>
             </div>
 
             <h3 className="font-medium text-sm text-gray-800 group-hover:text-emerald-600 transition-colors duration-300 mb-1 line-clamp-2 min-h-[2rem]">
@@ -99,14 +127,14 @@ export default function ProductCard({ product }: ProductCardProps) {
               {product.discount > 0 ? (
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-base font-bold text-emerald-600">
-                  ৳
+                    ৳
                     {(
                       product.price -
                       product.price * (product.discount / 100)
                     ).toFixed(2)}
                   </span>
                   <span className="text-xs text-gray-400 line-through">
-                  ৳{product.price}
+                    ৳{product.price}
                   </span>
                 </div>
               ) : (

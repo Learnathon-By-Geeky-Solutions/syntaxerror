@@ -230,7 +230,7 @@ export default function OrdersPage() {
                 className="overflow-hidden hover:border-primary/20 transition-all"
               >
                 <div className="p-4 sm:p-6">
-                  <div className="flex flex-col sm:flex-row gap-3 justify-between mb-4">
+                  <div className="flex gap-3 justify-between mb-4">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <Package className="w-4 h-4 text-primary" />
@@ -250,7 +250,7 @@ export default function OrdersPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                       <Badge
                         className={cn(
                           "px-2 py-1 min-w-24 text-xs flex items-center gap-1",

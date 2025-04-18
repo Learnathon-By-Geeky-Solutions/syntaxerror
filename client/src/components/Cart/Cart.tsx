@@ -15,6 +15,7 @@ import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
@@ -24,6 +25,7 @@ export default function Cart() {
   const { items, removeItem, clearCart, updateQuantity } = useCart();
   const router = useRouter();
   const {user} = useUser();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleCheckout = () => {
     if (items.length === 0) {
@@ -32,9 +34,11 @@ export default function Cart() {
     }
     if (!user) {
       toast.error("Please login to proceed with checkout.");
+      setIsMenuOpen(false);
       router.push("/login");
       return;
     }
+    setIsMenuOpen(false);
     router.push("/checkout");
   };
 
@@ -69,7 +73,7 @@ export default function Cart() {
 
   return (
     <div>
-      <Sheet>
+      <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
         <SheetTrigger asChild>
           <Button variant="outline" className="relative">
             <ShoppingCart size={24} />
@@ -169,12 +173,12 @@ export default function Cart() {
                   <div className="flex justify-between">
                     <span className="text-sm">Subtotal</span>
                     <span className="text-sm font-medium">
-                      BDT{subtotal.toFixed(2)}
+                    ৳{subtotal.toFixed(2)}
                     </span>
                   </div>
                   <div className="flex justify-between font-medium">
                     <span>Total</span>
-                    <span>BDT{total.toFixed(2)}</span>
+                    <span>৳{total.toFixed(2)}</span>
                   </div>
                 </div>
                 <Button
