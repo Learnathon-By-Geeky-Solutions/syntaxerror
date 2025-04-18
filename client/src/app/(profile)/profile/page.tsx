@@ -10,20 +10,23 @@ import axios from "axios";
 import { format } from "date-fns";
 import {
   Calendar,
-  Heart,
   Lock,
+  LogOut,
   Mail,
   ShoppingBag,
   User,
   UserCog,
 } from "lucide-react";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function ProfilePage() {
   const { user, isLoading } = useUser();
   const [orders, setOrders] = useState<Order[]>([]);
-
+  const router = useRouter();
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -41,6 +44,26 @@ export default function ProfilePage() {
       fetchOrders();
     }
   }, [user]);
+
+  const handleLogout = async () => {
+    console.log("Logout clicked");
+    try {
+      if (user?.provider === "google") {
+        await signOut({ callbackUrl: "/login" });
+      } else {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/logout`,
+          {},
+          { withCredentials: true }
+        );
+        router.push("/login");
+      }
+      toast.success("Logout successful");
+    } catch (error) {
+      console.log(error);
+      toast.error("Logout failed:");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -131,8 +154,10 @@ export default function ProfilePage() {
                 <ShoppingBag className="w-5 h-5 text-primary" />
                 <span>
                   {
-                    orders.filter((order) => order.status === "Completed" ||  order.status === "Paid")
-                      .length
+                    orders.filter(
+                      (order) =>
+                        order.status === "Completed" || order.status === "Paid"
+                    ).length
                   }{" "}
                   Orders
                 </span>
@@ -153,12 +178,6 @@ export default function ProfilePage() {
                     link: "/order",
                   },
                   {
-                    icon: Heart,
-                    label: "Lists",
-                    desc: "Saved items",
-                    link: "/order",
-                  },
-                  {
                     icon: Lock,
                     label: "Password",
                     desc: "Change password",
@@ -170,21 +189,37 @@ export default function ProfilePage() {
                     desc: "Update details",
                     link: "/edit-profile",
                   },
+                  {
+                    icon: LogOut,
+                    label: "Logout",
+                    desc: "Sign out",
+                    link: "/login",
+                  },
                 ].map((item, index) => (
                   <Card
                     key={index}
                     className="p-4 hover:bg-accent cursor-pointer transition-all hover:scale-105"
                   >
-                    <Link
-                      href={item.link}
-                      className="flex flex-col items-center text-center gap-2"
-                    >
-                      <item.icon className="w-6 h-6 text-primary" />
-                      <h3 className="font-medium">{item.label}</h3>
-                      <p className="text-xs text-muted-foreground">
-                        {item.desc}
-                      </p>
-                    </Link>
+                    {item.label === "Logout" ? (
+                      <div onClick={handleLogout} className="flex flex-col items-center text-center gap-2">
+                        <item.icon className="w-6 h-6 text-red-500" />
+                        <h3 className="font-medium text-red-500">{item.label}</h3>
+                        <p className="text-xs text-muted-foreground">
+                          {item.desc}
+                        </p>
+                      </div>
+                    ) : (
+                      <Link
+                        href={item.link}
+                        className="flex flex-col items-center text-center gap-2"
+                      >
+                        <item.icon className="w-6 h-6 text-primary" />
+                        <h3 className="font-medium">{item.label}</h3>
+                        <p className="text-xs text-muted-foreground">
+                          {item.desc}
+                        </p>
+                      </Link>
+                    )}
                   </Card>
                 ))}
               </div>
@@ -194,11 +229,20 @@ export default function ProfilePage() {
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-6">Recent Activity</h2>
               <div className="space-y-4">
-                {orders.filter((order) => order.status === "Paid" || order.status === "Completed").length >
-                0 ? (
+                {orders.filter(
+                  (order) =>
+                    order.status === "Paid" || order.status === "Completed"
+                ).length > 0 ? (
                   orders
-                    .filter((order) => order.status === "Paid" || order.status === "Completed")
-                    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) 
+                    .filter(
+                      (order) =>
+                        order.status === "Paid" || order.status === "Completed"
+                    )
+                    .sort(
+                      (a, b) =>
+                        new Date(b.createdAt).getTime() -
+                        new Date(a.createdAt).getTime()
+                    )
                     .slice(0, 2)
                     .map((order) => (
                       <div
