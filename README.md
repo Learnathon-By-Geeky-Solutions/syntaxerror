@@ -10,7 +10,7 @@
 
 
 ## Project Description
-Title: iKrishak
+ikrishak
 
 ## Getting Started
 1. Clone the repository
