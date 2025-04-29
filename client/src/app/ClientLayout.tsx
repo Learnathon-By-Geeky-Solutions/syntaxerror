@@ -33,7 +33,7 @@ export default function ClientLayout({
             <CartProvider>
               {!shouldHideLayout && <Navbar />}
               <Toaster richColors />
-              <div className="container mx-auto">
+              <div className="mx-auto">
                 {children}
               </div>
               {!shouldHideLayout && <Footer />}

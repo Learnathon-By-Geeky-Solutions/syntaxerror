@@ -32,7 +32,7 @@ const LatestProducts = () => {
   console.log(data);
 
   return (
-    <section className="py-6 px-4 md:px-8 md:py-8">
+    <section className="container mx-auto py-6 px-4 md:px-8 md:py-8">
       <div className="mx-auto">
         <div className="flex justify-between items-center mb-2 md:mb-4">
           <div className="flex items-center gap-1 md:gap-2">
