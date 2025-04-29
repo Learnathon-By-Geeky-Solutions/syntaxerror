@@ -10,7 +10,6 @@ import {
 } from "lucide-react"
 import * as React from "react"
 
-import { useUser } from "@/app/hooks/useUser"
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
@@ -21,11 +20,12 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { useUser } from "@/hooks/useUser"
 
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
+    name: "iKrishak",
     email: "m@example.com",
     image: "/avatars/shadcn.jpg",
   },

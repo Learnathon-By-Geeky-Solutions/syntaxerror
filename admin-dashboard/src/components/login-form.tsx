@@ -1,5 +1,5 @@
 "use client";
-import { useUser } from "@/app/hooks/useUser";
+import { useUser } from "@/hooks/useUser";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";

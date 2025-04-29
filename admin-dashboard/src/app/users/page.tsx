@@ -1,6 +1,7 @@
 "use client";
 import PaginationComponent from "@/components/Products/PaginationComponent";
 import SearchBar from "@/components/Products/SearchBar";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -25,11 +26,15 @@ import {
 } from "@/components/ui/select";
 import AddUserForm from "@/components/Users/AddUserForm";
 import UserTable from "@/components/Users/UserTable";
+import { useUser } from "@/hooks/useUser";
 import { IUser, PaginationInfo } from "@/types/types";
 import { Package2, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 function Page() {
+  const {user} = useUser();
+  const router = useRouter();
   const [users, setUsers] = useState<IUser[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   // const [roles, setRoles] = useState<IRole[]>([]);
@@ -47,7 +52,7 @@ function Page() {
     async (page: number) => {
       setIsLoading(true);
       try {
-        let url = `http://localhost:5000/api/user?page=${page}&limit=10`;
+        let url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/user?page=${page}&limit=10`;
 
         if (selectedRole && selectedRole !== "all") {
           url += `&role=${selectedRole}`;
@@ -88,6 +93,29 @@ function Page() {
 
     return () => clearTimeout(timeoutId);
   }, [searchTerm]);
+
+  if(!user) {
+    return(
+      <div className="flex items-center justify-center">
+        <Card className="w-full border-zinc-800">
+          <CardHeader>
+            <CardTitle className="text-center text-white">Access Denied</CardTitle>
+            <CardDescription className="text-center text-zinc-400">
+              You need to be logged in as an admin to view this page
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <Button
+              onClick={() => router.push('/login')}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              Go to Login
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="lg:min-w-[75vw] lg:p-8 p-4">
