@@ -5,7 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { Toaster } from "sonner";
-import { UserProvider } from "./hooks/useUser";
+import { UserProvider } from "../hooks/useUser";
 
 export default function ClientLayout({
   children,

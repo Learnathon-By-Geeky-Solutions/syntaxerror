@@ -1,10 +1,13 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Activity, Box, DollarSign, ShoppingCart, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useUser } from "../../hooks/useUser";
 
 interface Order {
   _id: string;
@@ -37,7 +40,8 @@ export default function DashboardPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const { user } = useUser();
+  const router = useRouter();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -67,6 +71,28 @@ export default function DashboardPage() {
     fetchData();
   }, []);
 
+  if(!user) {
+    return (
+        <div className="flex items-center justify-center">
+        <Card className="w-full border-zinc-800">
+          <CardHeader>
+            <CardTitle className="text-center text-white">Access Denied</CardTitle>
+            <CardDescription className="text-center text-zinc-400">
+              You need to be logged in as an admin to view this page
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <Button
+              onClick={() => router.push('/login')}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              Go to Login
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
   if (isLoading) {
     return (
       <div className="p-6 text-center text-white">

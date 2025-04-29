@@ -2,8 +2,11 @@
 
 import { OrderList } from "@/components/Orders/OrderList";
 import { SearchAndFilter } from "@/components/Orders/SearchAndFilter";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useUser } from "@/hooks/useUser";
 import { Package2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 // Interfaces
@@ -52,6 +55,8 @@ interface PaginationMeta {
 }
 
 export default function OrdersPage() {
+  const {user} = useUser();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
@@ -154,6 +159,30 @@ export default function OrdersPage() {
   // 🔵 Paginate filtered orders
   const startIndex = (paginationMeta.page - 1) * paginationMeta.limit;
   const paginatedOrders = filteredOrders.slice(startIndex, startIndex + paginationMeta.limit);
+
+  if(!user) {
+    return(
+      <div className="flex items-center justify-center">
+        <Card className="w-full border-zinc-800">
+          <CardHeader>
+            <CardTitle className="text-center text-white">Access Denied</CardTitle>
+            <CardDescription className="text-center text-zinc-400">
+              You need to be logged in as an admin to view this page
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <Button
+              onClick={() => router.push('/login')}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              Go to Login
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
 
   return (
     <div className="min-h-screen bg-background">
