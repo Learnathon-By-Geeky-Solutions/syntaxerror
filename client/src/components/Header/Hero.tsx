@@ -33,11 +33,11 @@ export default function Hero() {
               <span className="block text-green-600">Delivered Daily</span>
             </h1>
             
-            <p className="text-lg md:text-xl mb-8 text-gray-300 max-w-2xl">
+            <p className="text-base md:text-xl mb-8 text-gray-300 max-w-2xl">
               Experience the convenience of having farm-fresh produce and premium groceries delivered right to your doorstep. Quality you can trust, service you can rely on.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+            <div className="flex flex-col sm:flex-row gap-4 md:mb-12">
               <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white">
                 <ShoppingBasket className="w-5 h-5 mr-2" />
                 <Link href="/product">Start Shopping</Link>
