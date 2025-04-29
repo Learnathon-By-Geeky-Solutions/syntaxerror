@@ -11,7 +11,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, setSearchTerm }) => {
     <div className="relative flex-1">
       <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
       <Input
-        placeholder="Search products..."
+        placeholder="Search..."
         className="pl-8 bg-zinc-900 border-zinc-800 text-white"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}

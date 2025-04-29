@@ -12,5 +12,7 @@ router.post('/reset-password', AuthController.resetPassword);
 router.get('/me', auth('Admin','Consumer') ,AuthController.getme);
 router.post('/googleUser' ,AuthController.googleAuthLogin);
 router.patch('/changePassword',auth('Admin','Consumer') ,AuthController.changePassword);
+router.post("/admin/login", AuthController.AdminLogin);
+
 
 export const AuthRoutes = router;

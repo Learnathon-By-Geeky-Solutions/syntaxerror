@@ -1,10 +1,8 @@
 "use client"
 
 import {
-  AudioWaveform,
   BookOpen,
   Bot,
-  Command,
   Frame,
   GalleryVerticalEnd,
   Settings2,
@@ -12,6 +10,7 @@ import {
 } from "lucide-react"
 import * as React from "react"
 
+import { useUser } from "@/app/hooks/useUser"
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
@@ -28,29 +27,29 @@ const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    image: "/avatars/shadcn.jpg",
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "iKrishak",
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: "Admin",
     },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
+    // {
+    //   name: "Acme Corp.",
+    //   logo: AudioWaveform,
+    //   plan: "Startup",
+    // },
+    // {
+    //   name: "Evil Corp.",
+    //   logo: Command,
+    //   plan: "Free",
+    // },
   ],
   navMain: [
     {
       title: "Home",
-      url: "/",
+      url: "/dashboard",
       icon: SquareTerminal,
       isActive: true,
     },
@@ -71,7 +70,7 @@ const data = {
     },
     {
       title: "Orders",
-      url: "#",
+      url: "/orders",
       icon: BookOpen,
       // items: [
       //   {
@@ -113,6 +112,11 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useUser();
+  const userData = user
+    ? { ...user, image: user.image ?? "/default-avatar.jpg" }
+    : data.user;
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -123,7 +127,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={userData} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
