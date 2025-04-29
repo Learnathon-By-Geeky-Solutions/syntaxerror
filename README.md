@@ -10,7 +10,7 @@
 
 
 ## Project Description
-i krishak
+ikrishak
 
 ## Getting Started
 1. Clone the repository
