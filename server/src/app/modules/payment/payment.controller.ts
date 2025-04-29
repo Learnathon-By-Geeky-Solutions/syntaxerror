@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 import { UserModel } from "../user/user.model";
 import { CustomerInfo, OrderItem } from "./payment.interface";
 import { OrderModel } from "./payment.model";
-import { createCheckoutSessionService, getOrderByIdService } from "./payment.service";
+import { createCheckoutSessionService, getAllOrdersService, getOrderByIdService, makeOrderCompleteService } from "./payment.service";
 
 interface CreateCheckoutSessionBody {
   orders: OrderItem[];
@@ -116,3 +116,36 @@ export const getOrderById = async (req: Request, res: Response) => {
   }
   res.status(200).json({ message: "Order retrieved successfully", data: result });
 }
+
+export const getAllOrders = async (req: Request, res: Response) => {
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const orderId = req.query.orderId as string;
+
+  const result = await getAllOrdersService(page, limit, orderId);
+
+  res.status(200).json({
+    success: true,
+    message: "Orders retrieved successfully",
+    meta: result.meta,
+    data: result.orders,
+  });
+};
+
+export const makeOrderComplete = async (req: Request, res: Response) => {
+  const {id} = req.params;
+  const result = await makeOrderCompleteService(id);
+  if (!result) {
+    res.status(404).json({ message: "Order not found" });
+  }
+  res.status(200).json({ message: "Order marked as completed", data: result });
+}
+
+export const PaymentController = {
+  createCheckoutSession,
+  insertOrderController,
+  markOrderAsPaid,
+  getOrderById,
+  getAllOrders,
+  makeOrderComplete
+};

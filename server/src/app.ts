@@ -14,7 +14,7 @@ const app: Application = express();
 
 // parsers
 app.use(cors({
-    origin: ["http://localhost:3001", "http://localhost:3000", "https://ikrishak.vercel.app"],
+    origin: ["http://localhost:3001", "http://localhost:3000", "https://ikrishak.vercel.app", "https://ikrishak-admin.vercel.app"],
     credentials: true,
 }));
 app.use(cookieParser());

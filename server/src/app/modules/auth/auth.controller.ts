@@ -55,6 +55,28 @@ const login = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const AdminLogin = catchAsync(async (req: Request, res: Response) => {
+  const result = await AuthService.AdminLogin(req.body);
+  const { accessToken } = result;
+
+  res.cookie("token", accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+  });
+
+
+  res.send({
+    success: true,
+    message: "Login successful",
+    statusCode: 200,
+    data: {
+      token: accessToken,
+    },
+  });
+});
+
+
 const logout = catchAsync(async (req: Request, res: Response) => {
   res.clearCookie("token", {
     httpOnly: true,
@@ -140,5 +162,6 @@ export const AuthController = {
   resetPassword,
   getme,
   googleAuthLogin,
-  changePassword
+  changePassword,
+  AdminLogin
 };

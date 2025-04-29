@@ -88,6 +88,38 @@ const login = async (payload: ILogin) => {
   return { accessToken };
 };
 
+const AdminLogin = async (payload: ILogin) => {
+  const checkUser = await UserModel.findOne({ email: payload.email });
+  if (!checkUser) {
+    throw new Error("Email not found");
+  }
+  if (checkUser.provider !== "local") {
+    throw new Error("Login with Google is not allowed for admin");
+  }
+  if (checkUser.role !== "Admin") {
+    throw new Error("You are not authorized to access this resource");
+  }
+  if (checkUser.isBlocked) {
+    throw new Error("User is blocked");
+  }
+  const isPasswordMatch = bcrypt.compareSync(
+    payload.password,
+    checkUser.password
+  );
+  if (!isPasswordMatch) {
+    throw new Error("Invalid password");
+  }
+
+  const jwtPayload = {
+    email: checkUser.email,
+    role: checkUser.role,
+  };
+
+  const accessToken = createToken(jwtPayload, config.jwt_secret, "1h");
+  return { accessToken };
+};
+
+
 const initiatePasswordReset = async (email: string) => {
   const user = await UserModel.findOne({ email });
   if (!user) {
@@ -175,5 +207,6 @@ export const AuthService = {
   initiatePasswordReset,
   resetPassword,
   googleAuthLogin,
-  changePassword
+  changePassword,
+  AdminLogin
 };

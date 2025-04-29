@@ -28,6 +28,7 @@ const UserTable: React.FC<ProductTableProps> = ({
 }) => {
   const filteredUsers = users.filter((user) =>
     user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  || user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -54,7 +55,7 @@ const UserTable: React.FC<ProductTableProps> = ({
           ) : filteredUsers.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="text-center text-white py-8">
-                No products found
+                No users found
               </TableCell>
             </TableRow>
           ) : (
