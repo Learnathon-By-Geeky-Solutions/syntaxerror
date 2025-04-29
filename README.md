@@ -1,12 +1,12 @@
 # syntaxerror
 
 ## Team Members
-- 8ad40n (Team Leader)
-- nadim45448
-- codeesh
+- [8ad40n](https://github.com/8ad40n) (Team Leader)
+- [nadim45448](https://github.com/nadim45448)
+- [codeesh](https://github.com/codeesh)
 
 ## Mentor
-- siam456
+- [siam456](https://github.com/Siam456)
 
 
 ## Project Description
