@@ -151,7 +151,7 @@ export default function DashboardPage() {
     }));
 
   return (
-    <div className="p-6 space-y-6 bg-background w-[80vw] mx-auto">
+    <div className="p-6 space-y-6 bg-background w-[100vw] md:w-[75vw] mx-auto">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
         <p className="text-sm text-muted-foreground">
@@ -208,8 +208,8 @@ export default function DashboardPage() {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <Card className="">
               <CardHeader>
                 <CardTitle>Sales Overview</CardTitle>
                 <CardDescription>Monthly sales performance</CardDescription>
@@ -227,7 +227,7 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="col-span-3">
+            <Card className="">
               <CardHeader>
                 <CardTitle>Category Performance</CardTitle>
                 <CardDescription>Items sold by category</CardDescription>
