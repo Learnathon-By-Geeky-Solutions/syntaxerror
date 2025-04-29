@@ -6,7 +6,9 @@
 
 A platform bridging farmers and consumers for fresh agricultural products. Built with modern web technologies for scalability and security.
 
-[iKrishak Demo](https://ikrishak.vercel.app) <!-- Replace with actual screenshot -->
+### iKrishak Demo: [https://ikrishak.vercel.app](https://ikrishak.vercel.app) 
+
+### iKrishak Admin Demo: [https://ikrishak-admin.vercel.app/login](https://ikrishak-admin.vercel.app/login) 
 ## Team: SyntaxError
 **Team Members**
 - [8ad40n](https://github.com/8ad40n) (Team Leader)
@@ -15,22 +17,20 @@ A platform bridging farmers and consumers for fresh agricultural products. Built
 
 **Mentor**
 - [siam456](https://github.com/Siam456)
-## Tech Stack 🛠️
-**Frontend**  
-| Component       | Technology       |
-|-----------------|------------------|
-| Framework       | Next.js      |
-| Styling         | Tailwind CSS     |
-| Component Library | ShadCN/ui      |
+## 🛠️ Tech Stack 
+### **Frontend**  
+- **Framework**: Next.js  
+- **Styling**: Tailwind CSS  
+- **Component Library**: ShadCN/ui
 
-**Backend**  
-| Component       | Technology       |
-|-----------------|------------------|
-| Framework       | Express.js       |
-| Database        | MongoDB (Atlas)  |
-| ORM             | Mongoose         |
+---
+### **Backend**  
+- **Framework**: Express.js  
+- **Database**: MongoDB (Atlas)  
+- **ORM**: Mongoose  
 
-**Services**  
+---
+### **Services**  
 - Authentication: JWT, Google OAuth
 - Payments: Stripe API
 - Email: Nodemailer
@@ -131,39 +131,53 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=
 npm run dev
 ```
 ---
-## User Flow
-![alt text](image.png)
+## 👤 User Flow
+![alt text](/resources/image.png)
 
-## Admin Dashboard
-✅ Admin Login
-
-![alt text](image-2.png)
-
-
-✅ Admin Dashboard
-
-![alt text](image-3.png)
-![alt text](image-5.png)
+## 🧑‍💼 Admin Dashboard
+#### ✅ Admin Login
+JWT-based authentication has been implemented, allowing only users with the 'admin' role to log in.
+![alt text](/resources/image-2.png)
 
 
-✅ Product Management
+#### ✅ Admin Dashboard
+The admin dashboard provides a comprehensive summary including total revenue, total orders, total active users, and stock status. It also features visual representations such as sales overview charts, category-wise performance analytics, and recent activity insights.
+![alt text](/resources/image-3.png)
+![alt text](/resources/image-5.png)
 
-![alt text](image-6.png)
-![alt text](image-5.png)
+
+#### ✅ Products Management
+The admin has the ability to manage products by viewing all available items. They can edit, add, and delete products, as well as filter by categories. Additionally, a real-time search functionality is provided for quick product lookup. Pagination is implemented to efficiently handle product listings when the total exceeds 10 items.
+![alt text](/resources/image-7.png)
+![alt text](/resources/image-8.png)
+![alt text](/resources/image-9.png)
 
 
-## Getting Started
-1. Clone the repository
-2. Install dependencies
-3. Start development
+#### ✅ Users Management
+The admin has the ability to manage users by viewing all available users. They can edit, add, and delete users, as well as filter by roles. Additionally, a real-time search functionality is provided for quick user lookup. Pagination is implemented to efficiently handle user listings when the total exceeds 10 items.
+![alt text](/resources/image-10.png)
 
-## Development Guidelines
-1. Create feature branches
-2. Make small, focused commits
-3. Write descriptive commit messages
-4. Create pull requests for review
 
-## Resources
+
+#### ✅ Categories Management
+The admin has the ability to manage categories by viewing all available items. They can edit, add, and delete categories, as well as filter by categories. Additionally, a real-time search functionality is provided for quick category lookup. Pagination is implemented to efficiently handle category listings when the total exceeds 10 items.
+![alt text](/resources/image-11.png)
+
+
+
+#### ✅ Orders Management
+The admin can view all orders and filter them based on their status. A real-time search feature is available to quickly locate orders by their order ID. The admin can also access detailed order information and mark orders as "Completed." Pagination is implemented to efficiently manage large order lists.
+![alt text](/resources/image-12.png)
+
+
+
+## 🌐 Deployment Plan
+- **Frontend**: Vercel
+- **Admin Dashboard**: Vercel
+- **Backend API**: Vercel
+- **Database**: MongoDB Atlas
+
+
+## 📖 Resources
 - [Project Documentation](https://docs.google.com/document/d/1JJoQEqUjDCGsn5zY_JTCineFpa0qVziD6ytiXhV6rdo/edit?usp=sharing)
-- [Development Setup](docs/setup.md)
-- [Contributing Guidelines](CONTRIBUTING.md)
+
