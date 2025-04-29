@@ -96,7 +96,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                   )}
                 </TableCell>
                 <TableCell className="text-white text-sm md:text-base">
-                  ${product.price.toFixed(2)}
+                ৳{product.price.toFixed(2)}
                 </TableCell>
                 <TableCell className="hidden sm:table-cell">
                   <span
