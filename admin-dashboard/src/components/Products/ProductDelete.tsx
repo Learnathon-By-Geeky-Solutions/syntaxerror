@@ -1,13 +1,13 @@
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Product } from "@/types/types";
 import axios from "axios";
@@ -22,7 +22,7 @@ import { toast } from "sonner";
     setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   }) {
     const handleDelete = async() => {
-        const res = await axios.delete(`http://localhost:5000/api/product/${product._id}`);
+        const res = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/api/product/${product._id}`);
           console.log(res.data.data);
           setProducts(prevProducts => 
             prevProducts.filter((p) => p._id !== product._id)

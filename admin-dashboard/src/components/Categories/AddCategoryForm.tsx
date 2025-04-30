@@ -40,7 +40,7 @@ export default function AddCategoryForm({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await fetch("http://localhost:5000/api/category", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/category`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

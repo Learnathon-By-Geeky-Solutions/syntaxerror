@@ -23,7 +23,7 @@ export default function CategoryDelete({
 }) {
   const handleDelete = async () => {
     const res = await axios.delete(
-      `http://localhost:5000/api/category/${categories._id}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/category/${categories._id}`
     );
     console.log(res.data.data);
     setCategories((prevCategories) =>

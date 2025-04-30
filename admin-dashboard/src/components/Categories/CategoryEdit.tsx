@@ -42,7 +42,7 @@ export default function CategoryEdit({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/category/${categories._id}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/category/${categories._id}`,
         {
           method: 'PATCH',
           headers: {

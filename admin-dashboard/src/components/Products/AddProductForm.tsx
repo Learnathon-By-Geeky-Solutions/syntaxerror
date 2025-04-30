@@ -59,7 +59,7 @@ export default function AddProductForm({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await fetch("http://localhost:5000/api/product", {
+      const response = await fetch("${process.env.NEXT_PUBLIC_BASE_URL}/api/product", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

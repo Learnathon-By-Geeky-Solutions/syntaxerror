@@ -22,7 +22,7 @@ import { toast } from "sonner";
     setUsers: React.Dispatch<React.SetStateAction<IUser[]>>;
   }) {
     const handleDelete = async() => {
-        const res = await axios.delete(`http://localhost:5000/api/user/${user._id}`);
+        const res = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${user._id}`);
           console.log(res.data.data);
           setUsers(prevUser => 
             prevUser.filter((p) => p._id !== user._id)

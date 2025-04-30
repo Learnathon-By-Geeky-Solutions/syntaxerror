@@ -53,7 +53,7 @@ export default function ProductEdit({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    const res = await axios.patch(`http://localhost:5000/api/product/${product._id}`, {
+    const res = await axios.patch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/product/${product._id}`, {
       ...values,
       category: values.categoryId,
     });
