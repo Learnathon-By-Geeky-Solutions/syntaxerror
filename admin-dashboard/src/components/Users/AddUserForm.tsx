@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,7 +36,7 @@ export default function AddUserForm({ onSuccess, onCancel }: AddUserFormProps) {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await fetch("http://localhost:5000/api/user/addUser", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/addUser`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
